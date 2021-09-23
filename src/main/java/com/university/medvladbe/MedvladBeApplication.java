@@ -13,6 +13,4 @@ public class MedvladBeApplication {
         SpringApplication.run(MedvladBeApplication.class, args);
     }
 
-
-
 }
