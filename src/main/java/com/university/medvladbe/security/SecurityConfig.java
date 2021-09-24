@@ -12,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    //TODO:: work on authentification and role based endpoints
+
     @Autowired
     PasswordEncoder passwordEncoder;
 
@@ -27,6 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    //create
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic()
