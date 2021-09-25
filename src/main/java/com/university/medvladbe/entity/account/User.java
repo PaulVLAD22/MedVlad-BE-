@@ -1,9 +1,6 @@
 package com.university.medvladbe.entity.account;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
@@ -20,13 +17,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String firstName;
-    private int roleId;
+    @ManyToOne
+    private Role role;
     private String lastName;
     private String username;
     private String email;
     private String password;
     private String profilePicture;
-    private Boolean active;
+    private boolean active;
     private long token;
     private int adminPoints;
     private int doctorPoints;
