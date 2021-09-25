@@ -20,8 +20,8 @@ public class User {
     @ManyToOne
     private Role role;
     private String lastName;
+    @Column(unique = true)
     private String username;
-    private String email;
     private String password;
     private String profilePicture;
     private boolean active;

@@ -1,4 +1,4 @@
-package com.university.medvladbe.security;
+package com.university.medvladbe.security.Cors;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
