@@ -3,7 +3,6 @@ package com.university.medvladbe.service;
 import com.university.medvladbe.entity.account.User;
 import com.university.medvladbe.exception.BadLogin;
 import com.university.medvladbe.repository.UserRepository;
-import com.university.medvladbe.security.MyUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +49,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         } else {
             log.info("User found in database");
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-            authorities.add(new SimpleGrantedAuthority(user.getRole().getName().toString()));
+            log.info(user.getRoles().toString());
+            user.getRoles().forEach(role ->{
+                authorities.add(new SimpleGrantedAuthority(role.getName().toString()));
+            });
+
+            log.info("Password:"+user.getPassword());
             // eu am u nsingur role , daca nu te descurci schimba la Lista
             //TODO:: MEREU SPUNE CA PAROLA E GRESITA , REZOLVA
             return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);

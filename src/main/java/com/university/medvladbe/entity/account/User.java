@@ -5,11 +5,14 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import static javax.persistence.FetchType.EAGER;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
 @Entity
 @Table(name = "user")
 public class User {
@@ -17,8 +20,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String firstName;
-    @ManyToOne
-    private Role role;
+    @ManyToMany(fetch=EAGER)
+    private Collection<Role> roles = new ArrayList<>();
     private String lastName;
     @Column(unique = true)
     private String username;

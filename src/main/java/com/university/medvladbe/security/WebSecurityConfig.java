@@ -1,6 +1,7 @@
 package com.university.medvladbe.security;
 
 import com.university.medvladbe.security.Filter.CustomAuthenticationFilter;
+import com.university.medvladbe.security.Filter.CustomAutherizationFilter;
 import com.university.medvladbe.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -38,21 +40,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
+        customAuthenticationFilter.setFilterProcessesUrl("/login");
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().anyRequest().permitAll();
-//        http.authorizeRequests()
-//                .antMatchers("/").hasAnyAuthority("USER")
-//                .antMatchers("/doctor/**").hasAnyAuthority("DOCTOR")
-//                .antMatchers("/admin/**").hasAuthority("ADMIN")
-//                .anyRequest().authenticated()
-//                .and()
-//                .formLogin().loginPage("/login").permitAll()
-//                .and()
-//                .logout().permitAll()
-//                .and()
-//                .exceptionHandling().accessDeniedPage("/403");
-        http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
+
+        http.authorizeRequests()
+                .antMatchers("/user/**").hasAnyAuthority("USER")
+                .antMatchers("/doctor/**").hasAnyAuthority("DOCTOR")
+                .antMatchers("/user/save").hasAuthority("USER")
+                .anyRequest().authenticated()
+                .and()
+                .exceptionHandling().accessDeniedPage("/403");
+        http.addFilter(customAuthenticationFilter);
+        http.addFilterBefore(new CustomAutherizationFilter(), UsernamePasswordAuthenticationFilter.class);
+
 
     }
 
