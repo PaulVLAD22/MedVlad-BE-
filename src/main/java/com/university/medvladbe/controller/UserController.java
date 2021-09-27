@@ -72,7 +72,7 @@ public class UserController {
                         .withExpiresAt(new Date(System.currentTimeMillis()+10*60*1000))// 10 minute
                         .withIssuer(request.getRequestURL().toString())
                         //punem rolul in refreshToken
-                        .withClaim("roles",user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
+                        .withClaim("role",user.getRole().getName().toString())
                         .sign(algorithm);
 
                 Map<String, String> tokens = new HashMap<>();

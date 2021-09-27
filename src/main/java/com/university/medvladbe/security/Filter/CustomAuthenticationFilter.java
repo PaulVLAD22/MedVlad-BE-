@@ -3,6 +3,9 @@ package com.university.medvladbe.security.Filter;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.university.medvladbe.dto.UserDto;
+import com.university.medvladbe.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,9 +30,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
 
-    public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public CustomAuthenticationFilter(AuthenticationManager authenticationManager,
+                                      UserRepository userRepository) {
         this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -48,13 +54,14 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         Algorithm algorithm =
                 Algorithm.HMAC256("secret".getBytes());
 
+        System.out.println(user.getAuthorities().toArray()[0].toString());
         String accessToken = JWT.create()
                 //aici punem informatiile token-ului
                 .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis()+10*60*1000))
                 .withIssuer(request.getRequestURL().toString())
                 //punem rolul in token
-                .withClaim("roles",user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .withClaim("role",user.getAuthorities().toArray()[0].toString())
                 .sign(algorithm);
 
         String refreshToken = JWT.create()
@@ -66,9 +73,24 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
 //        response.setHeader("access_token",accessToken);
 //        response.setHeader("refresh_token",refreshToken);
-        Map<String, String> tokens = new HashMap<>();
+        com.university.medvladbe.entity.account.User userEntity = userRepository.findByUsername(user.getUsername());
+        UserDto userDto =  UserDto.builder()
+                .firstName(userEntity.getFirstName())
+                .lastName(userEntity.getLastName())
+                .active(userEntity.isActive())
+                .dateOfRegistration(userEntity.getDateOfRegistration())
+                .adminPoints(userEntity.getAdminPoints())
+                .doctorPoints(userEntity.getDoctorPoints())
+                .profilePicture(userEntity.getProfilePicture())
+                .role(userEntity.getRole())
+                .token(userEntity.getToken())
+                .username(userEntity.getUsername())
+                .build();
+
+        Map<String, Object> tokens = new HashMap<>();
         tokens.put("access_token",accessToken);
         tokens.put("refresh_token",refreshToken);
+        tokens.put("data",userDto);
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(),tokens);
     }

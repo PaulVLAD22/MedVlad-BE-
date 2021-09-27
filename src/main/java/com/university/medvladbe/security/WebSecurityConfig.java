@@ -1,5 +1,6 @@
 package com.university.medvladbe.security;
 
+import com.university.medvladbe.repository.UserRepository;
 import com.university.medvladbe.security.Filter.CustomAuthenticationFilter;
 import com.university.medvladbe.security.Filter.CustomAuthorizationFilter;
 import com.university.medvladbe.service.UserDetailsServiceImpl;
@@ -19,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsServiceImpl userDetailsService;
+    private final UserRepository userRepository;
 
     @Bean
     @Override
@@ -34,7 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
+        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean(),userRepository);
         customAuthenticationFilter.setFilterProcessesUrl("/login");
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

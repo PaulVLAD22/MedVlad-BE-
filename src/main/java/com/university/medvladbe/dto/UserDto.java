@@ -1,23 +1,19 @@
-package com.university.medvladbe.entity.account;
+package com.university.medvladbe.dto;
 
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import com.university.medvladbe.entity.account.Role;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Collection;
-
-import static javax.persistence.FetchType.EAGER;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "user")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@AllArgsConstructor
+@Builder
+public class UserDto {
     private long id;
     private String firstName;
     @ManyToOne
@@ -25,7 +21,6 @@ public class User {
     private String lastName;
     @Column(unique = true)
     private String username;
-    private String password;
     private String profilePicture;
     private boolean active;
     private long token;
