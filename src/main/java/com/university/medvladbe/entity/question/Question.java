@@ -2,6 +2,8 @@ package com.university.medvladbe.entity.question;
 
 import com.university.medvladbe.entity.account.User;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -9,8 +11,10 @@ import javax.persistence.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 @SuperBuilder
 @Entity
+@Builder
 @Table(name = "question")
 public class Question {
     @Id

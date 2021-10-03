@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/test")
 public class TestController {
 
-    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/cox")
     public String getCox(){
         return "COX";

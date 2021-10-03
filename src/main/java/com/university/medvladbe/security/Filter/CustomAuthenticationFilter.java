@@ -74,18 +74,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 //        response.setHeader("access_token",accessToken);
 //        response.setHeader("refresh_token",refreshToken);
         com.university.medvladbe.entity.account.User userEntity = userRepository.findByUsername(user.getUsername());
-        UserDto userDto =  UserDto.builder()
-                .firstName(userEntity.getFirstName())
-                .lastName(userEntity.getLastName())
-                .active(userEntity.isActive())
-                .dateOfRegistration(userEntity.getDateOfRegistration())
-                .adminPoints(userEntity.getAdminPoints())
-                .doctorPoints(userEntity.getDoctorPoints())
-                .profilePicture(userEntity.getProfilePicture())
-                .role(userEntity.getRole())
-                .token(userEntity.getToken())
-                .username(userEntity.getUsername())
-                .build();
+        UserDto userDto =  userEntity.userDtoFromUser();
 
         Map<String, Object> tokens = new HashMap<>();
         tokens.put("access_token",accessToken);

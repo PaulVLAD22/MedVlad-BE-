@@ -45,7 +45,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/token/refresh/**").permitAll()
                 .antMatchers("/user/**").hasAnyAuthority("USER")
                 .antMatchers("/doctor/**").hasAnyAuthority("DOCTOR")
-                .antMatchers("/user/save").hasAuthority("USER")
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().accessDeniedPage("/403");

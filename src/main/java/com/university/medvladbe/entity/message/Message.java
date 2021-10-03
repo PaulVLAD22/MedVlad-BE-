@@ -1,4 +1,4 @@
-package com.university.medvladbe.entity.Message;
+package com.university.medvladbe.entity.message;
 
 import com.university.medvladbe.entity.account.User;
 import lombok.AllArgsConstructor;

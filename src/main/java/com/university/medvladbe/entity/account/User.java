@@ -1,5 +1,6 @@
 package com.university.medvladbe.entity.account;
 
+import com.university.medvladbe.dto.UserDto;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -32,4 +33,19 @@ public class User {
     private int adminPoints;
     private int doctorPoints;
     private Date dateOfRegistration;
+
+    public UserDto userDtoFromUser() {
+        return UserDto.builder()
+                .firstName(this.getFirstName())
+                .lastName(this.getLastName())
+                .active(this.isActive())
+                .dateOfRegistration(this.getDateOfRegistration())
+                .adminPoints(this.getAdminPoints())
+                .doctorPoints(this.getDoctorPoints())
+                .profilePicture(this.getProfilePicture())
+                .role(this.getRole())
+                .token(this.getToken())
+                .username(this.getUsername())
+                .build();
+    }
 }

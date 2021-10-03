@@ -16,7 +16,6 @@ import java.sql.Date;
 public class UserDto {
     private long id;
     private String firstName;
-    @ManyToOne
     private Role role;
     private String lastName;
     @Column(unique = true)
