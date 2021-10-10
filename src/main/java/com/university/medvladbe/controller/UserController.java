@@ -64,7 +64,7 @@ public class UserController {
 //        return ResponseEntity.ok().body(userService.saveUser(user));
 //    }
 
-    @PostMapping("/postQuestion")
+    @PostMapping("user/postQuestion")
     public ResponseEntity postQuestion(@RequestParam String content) {
         String userName;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -84,9 +84,8 @@ public class UserController {
         }
     }
 
-    @GetMapping("/getQuestions")
+    @GetMapping("getQuestions")
     public List<QuestionDto> getQuestions() {
-
         return questionService.getQuestions();
     }
 

@@ -1,5 +1,6 @@
 package com.university.medvladbe.entity.question;
 
+import com.university.medvladbe.dto.QuestionDto;
 import com.university.medvladbe.entity.account.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,4 +24,12 @@ public class Question {
     @ManyToOne
     private User user;
     private String content;
+
+    public QuestionDto questionDtoFromQuestion() {
+        return
+                QuestionDto.builder()
+                        .userDto(this.getUser().userDtoFromUser())
+                        .content(this.getContent())
+                        .build();
+    }
 }
