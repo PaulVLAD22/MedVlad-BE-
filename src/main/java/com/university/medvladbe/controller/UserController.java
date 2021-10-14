@@ -104,7 +104,7 @@ public class UserController {
                 String accessToken = JWT.create()
                         //aici punem informatiile refreshToken-ului
                         .withSubject(user.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))// 10 minute
+                        .withExpiresAt(new Date(System.currentTimeMillis() + 30*60*1000))// 30 min
                         .withIssuer(request.getRequestURL().toString())
                         //punem rolul in refreshToken
                         .withClaim("role", user.getRole().getName().toString())
