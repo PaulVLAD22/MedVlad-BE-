@@ -35,13 +35,11 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class UserController {
 
     private UserDetailsServiceImpl userService;
-    private QuestionService questionService;
 
     @Autowired
-    public UserController(UserDetailsServiceImpl userService,
-                          QuestionService questionService) {
+    public UserController(UserDetailsServiceImpl userService
+    ) {
         this.userService = userService;
-        this.questionService = questionService;
     }
 
 //    @GetMapping("/users")
@@ -64,30 +62,6 @@ public class UserController {
 //        return ResponseEntity.ok().body(userService.saveUser(user));
 //    }
 
-    @PostMapping("user/postQuestion")
-    public ResponseEntity postQuestion(@RequestParam String content) {
-        String userName;
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof UserDetails) {
-            userName = ((UserDetails) principal).getUsername();
-        } else {
-            userName = principal.toString();
-        }
-        log.info(userName);
-
-        try {
-            questionService.postQuestion(userName, content);
-            return new ResponseEntity(HttpStatus.OK);
-        }catch(Exception e){
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @GetMapping("getQuestions")
-    public List<QuestionDto> getQuestions() {
-        return questionService.getQuestions();
-    }
 
     @GetMapping("token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -104,7 +78,7 @@ public class UserController {
                 String accessToken = JWT.create()
                         //aici punem informatiile refreshToken-ului
                         .withSubject(user.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + 30*60*1000))// 30 min
+                        .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))// 30 min
                         .withIssuer(request.getRequestURL().toString())
                         //punem rolul in refreshToken
                         .withClaim("role", user.getRole().getName().toString())

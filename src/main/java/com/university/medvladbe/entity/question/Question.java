@@ -24,6 +24,7 @@ public class Question {
     @ManyToOne
     private User user;
     private String content;
+    private boolean checked;
 
     public QuestionDto questionDtoFromQuestion() {
         return

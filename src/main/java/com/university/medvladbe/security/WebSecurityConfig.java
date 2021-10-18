@@ -43,8 +43,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/token/refresh/**").permitAll()
-                .antMatchers("/user/**").hasAnyAuthority("USER")
-                .antMatchers("/doctor/**").hasAnyAuthority("DOCTOR")
+//                .antMatchers("/user/**").hasRole("USER")
+//                .antMatchers("/doctor/**").hasRole("DOCTOR")
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().accessDeniedPage("/403");
