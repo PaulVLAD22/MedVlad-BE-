@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.university.medvladbe.dto.QuestionDto;
+import com.university.medvladbe.dto.UserDto;
 import com.university.medvladbe.entity.account.Role;
 import com.university.medvladbe.entity.account.User;
 import com.university.medvladbe.entity.question.Question;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.ws.Response;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -41,27 +43,6 @@ public class UserController {
     ) {
         this.userService = userService;
     }
-
-//    @GetMapping("/users")
-//    public ResponseEntity<List<User>> getUsers() {
-//        return ResponseEntity.ok().body(userService.getUsers());
-//    }
-
-    //    @GetMapping("/login")
-//    public ResponseEntity<User> loginUser(@RequestParam String usernameOrEmail,
-//                                          @RequestParam String password){
-//        try {
-//            return new ResponseEntity<>(userService.login(usernameOrEmail, password), HttpStatus.ACCEPTED);
-//        }
-//        catch (BadLogin e){
-//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-//        }
-//    }
-//    @PostMapping("/user/save")
-//    public ResponseEntity<User> saveUser(@RequestBody User user) {
-//        return ResponseEntity.ok().body(userService.saveUser(user));
-//    }
-
 
     @GetMapping("token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -105,6 +86,29 @@ public class UserController {
         } else {
             throw new RuntimeException("Refresh Token is missing");
         }
+    }
 
+    @PostMapping("/register")
+    public ResponseEntity registerUser(@RequestParam String email,
+                                       @RequestParam String username,
+                                       @RequestParam String password,
+                                       @RequestParam String licensePicture,
+                                       @RequestParam String role) {
+        log.info(email + username + password + licensePicture + role);
+
+        userService.registerUser(email, username, password, role, licensePicture);
+        return new ResponseEntity(HttpStatus.OK);
+        //TODO:: ii tirmiti link care face cererea asta prin email dupa ce apasa pe register
+    }
+
+    @GetMapping("/admin/getInactiveUsers")
+    public List<UserDto> getInactiveUsers() {
+        return userService.getInactiveUsers();
+    }
+
+    //TODO:: doctor request admin accept page
+    @GetMapping("/admin/getInactiveDoctors")
+    public List<UserDto> getInactiveDoctors() {
+        return userService.getInactiveDoctors();
     }
 }

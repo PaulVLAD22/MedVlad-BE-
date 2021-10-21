@@ -1,7 +1,12 @@
 package com.university.medvladbe.service;
 
+import com.university.medvladbe.dto.UserDto;
+import com.university.medvladbe.entity.account.DefinedRole;
+import com.university.medvladbe.entity.account.Role;
 import com.university.medvladbe.entity.account.User;
 import com.university.medvladbe.exception.BadLogin;
+import com.university.medvladbe.exception.UserNotActive;
+import com.university.medvladbe.repository.RoleRepository;
 import com.university.medvladbe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -27,33 +32,67 @@ import java.util.Optional;
 @Slf4j
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public User saveUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+    public void registerUser(String email, String username,
+                             String password, String role, String licensePicture) {
+
+        if (licensePicture.equals(""))
+            licensePicture = null;
+
+        Role userRole = roleRepository.findRoleByName(DefinedRole.valueOf(role));
+
+        User user = User.builder()
+                .password(passwordEncoder.encode(password))
+                .username(username)
+                .email(email)
+                .role(userRole)
+                .licensePicture(licensePicture)
+                .build();
+
+        userRepository.save(user);
     }
 
-    public User getUser(String username){
+    public List<UserDto> getInactiveUsers(){
+        List <User> inactiveUsers = userRepository.findUserByActiveFalse();
+        List <UserDto> inactiveUsersDtos = new ArrayList<>();
+        inactiveUsers.stream().
+                filter(inactiveUser -> !inactiveUser.getRole().getName().toString().equals("DOCTOR")).
+                forEach(inactiveUser -> {inactiveUsersDtos.add(inactiveUser.userDtoFromUser());});
+        return inactiveUsersDtos;
+    }
+    public List<UserDto> getInactiveDoctors(){
+        List <User> inactiveUsers = userRepository.findUserByActiveFalse();
+        List <UserDto> inactiveUsersDtos = new ArrayList<>();
+        inactiveUsers.stream().
+                filter(inactiveUser -> inactiveUser.getRole().getName().toString().equals("DOCTOR")).
+                forEach(inactiveUser -> {inactiveUsersDtos.add(inactiveUser.userDtoFromUser());});
+        return inactiveUsersDtos;
+    }
+
+    public User getUser(String username) {
         return userRepository.findByUsername(username);
     }
-    public List<User> getUsers(){
-        return userRepository.findAll();
-    }
+
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
 
         if (user == null) {
             throw new UsernameNotFoundException("Could not find user");
-        } else {
+        }
+        else if (!user.isActive()){
+            throw new UserNotActive();
+        }
+        else {
             log.info("User found in database");
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
             log.info(user.getRole().toString());
             authorities.add(new SimpleGrantedAuthority(user.getRole().getName().toString()));
-            log.info("Password:"+user.getPassword());
-            // eu am u nsingur role , daca nu te descurci schimba la Lista
-            //TODO:: MEREU SPUNE CA PAROLA E GRESITA , REZOLVA
+            log.info("Password:" + user.getPassword());
+
             return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
         }
     }

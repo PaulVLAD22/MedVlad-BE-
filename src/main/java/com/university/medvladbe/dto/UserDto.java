@@ -15,6 +15,7 @@ import java.sql.Date;
 @Builder
 public class UserDto {
     private long id;
+    private String email;
     private String firstName;
     private Role role;
     private String lastName;
