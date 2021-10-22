@@ -22,6 +22,7 @@ public class UserDto {
     @Column(unique = true)
     private String username;
     private String profilePicture;
+    private String licensePicture;
     private boolean active;
     private long token;
     private int adminPoints;

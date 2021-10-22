@@ -62,13 +62,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 forEach(inactiveUser -> {inactiveUsersDtos.add(inactiveUser.userDtoFromUser());});
         return inactiveUsersDtos;
     }
-    public List<UserDto> getInactiveDoctors(){
+    public UserDto getInactiveDoctors(){
         List <User> inactiveUsers = userRepository.findUserByActiveFalse();
+        inactiveUsers.forEach(System.out::println);
         List <UserDto> inactiveUsersDtos = new ArrayList<>();
         inactiveUsers.stream().
                 filter(inactiveUser -> inactiveUser.getRole().getName().toString().equals("DOCTOR")).
                 forEach(inactiveUser -> {inactiveUsersDtos.add(inactiveUser.userDtoFromUser());});
-        return inactiveUsersDtos;
+
+        // verifica daca il da pe primujl inscris
+        return inactiveUsersDtos.get(0);
     }
 
     public User getUser(String username) {

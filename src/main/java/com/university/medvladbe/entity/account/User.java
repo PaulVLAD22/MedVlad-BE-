@@ -34,8 +34,8 @@ public class User {
     private String licensePicture;
     private boolean active = false;
     private long token;
-    private int adminPoints;
-    private int doctorPoints;
+    private int adminPoints=0;
+    private int doctorPoints=0;
     private Date dateOfRegistration;
 
     public UserDto userDtoFromUser() {
@@ -48,6 +48,7 @@ public class User {
                 .adminPoints(this.getAdminPoints())
                 .doctorPoints(this.getDoctorPoints())
                 .profilePicture(this.getProfilePicture())
+                .licensePicture(this.getLicensePicture())
                 .role(this.getRole())
                 .token(this.getToken())
                 .username(this.getUsername())

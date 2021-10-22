@@ -18,6 +18,8 @@ public class RegistrationResult {
     private long id;
     @ManyToOne
     private User admin;
+    @ManyToOne
+    private User user;
     private boolean verdict;
     private String comment;
 }

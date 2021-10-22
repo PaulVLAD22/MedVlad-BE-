@@ -107,8 +107,8 @@ public class UserController {
     }
 
     //TODO:: doctor request admin accept page
-    @GetMapping("/admin/getInactiveDoctors")
-    public List<UserDto> getInactiveDoctors() {
+    @GetMapping("/admin/getLastInactiveDoctor")
+    public UserDto getLastInactiveDoctor() {
         return userService.getInactiveDoctors();
     }
 }
