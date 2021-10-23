@@ -4,8 +4,10 @@ import com.university.medvladbe.dto.UserDto;
 import com.university.medvladbe.entity.account.DefinedRole;
 import com.university.medvladbe.entity.account.Role;
 import com.university.medvladbe.entity.account.User;
+import com.university.medvladbe.entity.registration.RegistrationResult;
 import com.university.medvladbe.exception.BadLogin;
 import com.university.medvladbe.exception.UserNotActive;
+import com.university.medvladbe.repository.RegistrationResultRepository;
 import com.university.medvladbe.repository.RoleRepository;
 import com.university.medvladbe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,7 @@ import java.util.Optional;
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final RegistrationResultRepository registrationResultRepository;
     private final PasswordEncoder passwordEncoder;
 
     public void registerUser(String email, String username,
@@ -52,6 +55,26 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .build();
 
         userRepository.save(user);
+    }
+    //TODO:: de testat
+    public void acceptUserRegistration(String adminUsername, String username,
+                                       String comment, boolean verdict){
+        User admin = userRepository.findByUsername(adminUsername);
+        User user = userRepository.findByUsername(username);
+        if (verdict){
+            user.setActive(true);
+            RegistrationResult registrationResult = RegistrationResult.builder()
+                    .user(user)
+                    .admin(admin)
+                    .comment(comment)
+                    .verdict(true)
+                    .build();
+            registrationResultRepository.save(registrationResult);
+        }
+        else{
+            userRepository.delete(user);
+        }
+
     }
 
     public List<UserDto> getInactiveUsers(){

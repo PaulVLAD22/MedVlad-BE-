@@ -34,16 +34,16 @@ public class QuestionController {
 
     @PostMapping("/admin/acceptQuestion")
     public ResponseEntity<HttpStatus> acceptQuestion(@RequestParam int id, @RequestParam String comment, @RequestParam boolean verdict) {
-        String userName;
+        String adminUsername;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (principal instanceof UserDetails) {
-            userName = ((UserDetails) principal).getUsername();
+            adminUsername = ((UserDetails) principal).getUsername();
         } else {
-            userName = principal.toString();
+            adminUsername = principal.toString();
         }
         try {
-            questionService.acceptQuestion(id, userName, comment, verdict);
+            questionService.acceptQuestion(id, adminUsername, comment, verdict);
             return new ResponseEntity(HttpStatus.OK);
         }catch (NotFound e) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);

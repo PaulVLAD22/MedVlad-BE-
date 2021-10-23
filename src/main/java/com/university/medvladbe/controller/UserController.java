@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.university.medvladbe.dto.QuestionDto;
 import com.university.medvladbe.dto.UserDto;
 import com.university.medvladbe.entity.account.Role;
@@ -110,5 +111,21 @@ public class UserController {
     @GetMapping("/admin/getLastInactiveDoctor")
     public UserDto getLastInactiveDoctor() {
         return userService.getInactiveDoctors();
+    }
+
+    @PostMapping("/admin/acceptUserRegistration")
+    public void acceptUserRegistration(@RequestParam String username,
+                                       @RequestParam String comment,
+                                       @RequestParam boolean verdict){
+        String adminUsername;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof UserDetails) {
+            adminUsername = ((UserDetails) principal).getUsername();
+        } else {
+            adminUsername = principal.toString();
+        }
+        System.out.println(username+" "+comment+" "+verdict);
+        userService.acceptUserRegistration(adminUsername,username,comment,verdict);
     }
 }
