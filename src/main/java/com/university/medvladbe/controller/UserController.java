@@ -11,6 +11,7 @@ import com.university.medvladbe.dto.UserDto;
 import com.university.medvladbe.entity.account.Role;
 import com.university.medvladbe.entity.account.User;
 import com.university.medvladbe.entity.question.Question;
+import com.university.medvladbe.entity.registration.RegistrationResult;
 import com.university.medvladbe.service.QuestionService;
 import com.university.medvladbe.service.UserDetailsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -102,12 +103,25 @@ public class UserController {
         //TODO:: ii tirmiti link care face cererea asta prin email dupa ce apasa pe register
     }
 
+    @GetMapping("/admin/getRegistrationResults")
+    public List<RegistrationResult> getRegistrationResults(){
+        String adminUsername;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof UserDetails) {
+            adminUsername = ((UserDetails) principal).getUsername();
+        } else {
+            adminUsername = principal.toString();
+        }
+
+        return userService.getRegistrationResultsByAdmin(adminUsername);
+    }
     @GetMapping("/admin/getInactiveUsers")
     public List<UserDto> getInactiveUsers() {
         return userService.getInactiveUsers();
     }
 
-    //TODO:: doctor request admin accept page
+
     @GetMapping("/admin/getLastInactiveDoctor")
     public UserDto getLastInactiveDoctor() {
         return userService.getInactiveDoctors();

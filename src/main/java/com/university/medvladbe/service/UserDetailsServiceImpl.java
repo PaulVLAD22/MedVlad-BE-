@@ -10,6 +10,7 @@ import com.university.medvladbe.exception.UserNotActive;
 import com.university.medvladbe.repository.RegistrationResultRepository;
 import com.university.medvladbe.repository.RoleRepository;
 import com.university.medvladbe.repository.UserRepository;
+import com.university.medvladbe.util.TransformationMethods;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -56,12 +57,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         userRepository.save(user);
     }
-    //TODO:: de testat
+    //TODO:: Pune functii in tranformation methods si foloseste-le cand trebuie (inlocuieste cod)
+
     public void acceptUserRegistration(String adminUsername, String username,
-                                       String comment, boolean verdict){
+                                       String comment, boolean verdict) {
         User admin = userRepository.findByUsername(adminUsername);
         User user = userRepository.findByUsername(username);
-        if (verdict){
+        if (verdict) {
             user.setActive(true);
             RegistrationResult registrationResult = RegistrationResult.builder()
                     .user(user)
@@ -70,31 +72,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     .verdict(true)
                     .build();
             registrationResultRepository.save(registrationResult);
-        }
-        else{
+        } else {
             userRepository.delete(user);
         }
 
     }
 
-    public List<UserDto> getInactiveUsers(){
-        List <User> inactiveUsers = userRepository.findUserByActiveFalse();
-        List <UserDto> inactiveUsersDtos = new ArrayList<>();
-        inactiveUsers.stream().
-                filter(inactiveUser -> !inactiveUser.getRole().getName().toString().equals("DOCTOR")).
-                forEach(inactiveUser -> {inactiveUsersDtos.add(inactiveUser.userDtoFromUser());});
-        return inactiveUsersDtos;
+    public List<UserDto> getInactiveUsers() {
+        List<User> inactiveUsers = userRepository.findUserByActiveFalse();
+        return TransformationMethods.userListToUserDtoList(inactiveUsers);
     }
-    public UserDto getInactiveDoctors(){
-        List <User> inactiveUsers = userRepository.findUserByActiveFalse();
-        inactiveUsers.forEach(System.out::println);
-        List <UserDto> inactiveUsersDtos = new ArrayList<>();
-        inactiveUsers.stream().
-                filter(inactiveUser -> inactiveUser.getRole().getName().toString().equals("DOCTOR")).
-                forEach(inactiveUser -> {inactiveUsersDtos.add(inactiveUser.userDtoFromUser());});
+    public List<RegistrationResult> getRegistrationResultsByAdmin(String adminUsername){
+        User admin = userRepository.findByUsername(adminUsername);
+        return registrationResultRepository.findAllByAdmin(admin);
+    }
 
-        // verifica daca il da pe primujl inscris
-        return inactiveUsersDtos.get(0);
+    public UserDto getInactiveDoctors() {
+        return userRepository.findFirstByActiveFalse().userDtoFromUser();
     }
 
     public User getUser(String username) {
@@ -108,11 +102,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         if (user == null) {
             throw new UsernameNotFoundException("Could not find user");
-        }
-        else if (!user.isActive()){
+        } else if (!user.isActive()) {
             throw new UserNotActive();
-        }
-        else {
+        } else {
             log.info("User found in database");
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
             log.info(user.getRole().toString());
