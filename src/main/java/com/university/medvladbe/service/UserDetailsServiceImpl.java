@@ -1,5 +1,6 @@
 package com.university.medvladbe.service;
 
+import com.university.medvladbe.dto.QuestionDto;
 import com.university.medvladbe.dto.UserDto;
 import com.university.medvladbe.entity.account.DefinedRole;
 import com.university.medvladbe.entity.account.Role;

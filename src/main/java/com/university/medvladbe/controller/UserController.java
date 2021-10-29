@@ -105,15 +105,7 @@ public class UserController {
 
     @GetMapping("/admin/getRegistrationResults")
     public List<RegistrationResult> getRegistrationResults(){
-        String adminUsername;
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof UserDetails) {
-            adminUsername = ((UserDetails) principal).getUsername();
-        } else {
-            adminUsername = principal.toString();
-        }
-
+        String adminUsername = getCurrentUsername();
         return userService.getRegistrationResultsByAdmin(adminUsername);
     }
     @GetMapping("/admin/getInactiveUsers")
@@ -131,15 +123,19 @@ public class UserController {
     public void acceptUserRegistration(@RequestParam String username,
                                        @RequestParam String comment,
                                        @RequestParam boolean verdict){
-        String adminUsername;
+        String adminUsername = getCurrentUsername();
+        System.out.println(username+" "+comment+" "+verdict);
+        userService.acceptUserRegistration(adminUsername,username,comment,verdict);
+    }
+    private String getCurrentUsername(){
+        String username;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (principal instanceof UserDetails) {
-            adminUsername = ((UserDetails) principal).getUsername();
+            username = ((UserDetails) principal).getUsername();
         } else {
-            adminUsername = principal.toString();
+            username = principal.toString();
         }
-        System.out.println(username+" "+comment+" "+verdict);
-        userService.acceptUserRegistration(adminUsername,username,comment,verdict);
+        return username;
     }
 }

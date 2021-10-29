@@ -39,7 +39,7 @@ public class QuestionService {
     public void acceptQuestion(long id, String adminUsername, String comment, boolean verdict) throws NotFound {
         User user = userRepository.findByUsername(adminUsername);
         Optional<Question> questionToAccept = questionRepository.findById(id);
-        if (!questionToAccept.isPresent()){
+        if (!questionToAccept.isPresent()) {
             throw new NotFound();
         }
 
@@ -67,24 +67,36 @@ public class QuestionService {
         questionRepository.save(question);
     }
 
-    public List<Question> getUncheckedQuestions(){
+    public List<Question> getUncheckedQuestions() {
         List<Question> questions = questionRepository.findUncheckedQuestions();
         return questions;
     }
 
-    public List<QuestionDto> getQuestions(){
+    public List<QuestionDto> getQuestionsForUser(String username) {
+        List<Question> questions = questionRepository.findActiveQuestions()
+                .stream().filter(question -> question.getUser().getUsername().equals(username))
+                .collect(Collectors.toList());
+
+        return questionListToQuestionDtoList(questions);
+    }
+
+    public List<QuestionDto> getQuestions() {
         List<Question> questions = questionRepository.findActiveQuestions();
-        List <QuestionDto> questionDtos = new ArrayList<>();
+        return questionListToQuestionDtoList(questions);
+    }
+
+    private List<QuestionDto> questionListToQuestionDtoList(List<Question> questions){
+        List<QuestionDto> questionDtos = new ArrayList<>();
 
         questions.forEach(question -> {
             questionDtos.add(
                     QuestionDto.builder()
-                    .userDto(question.getUser().userDtoFromUser())
-                    .content(question.getContent())
-                    .questionAnswerList(questionRepository.findAnswersForQuestion(question).stream().map(QuestionAnswer::questionAnswerDtoFromQuestionAnswer).collect(Collectors.toList()))
-                    .build());
+                            .userDto(question.getUser().userDtoFromUser())
+                            .content(question.getContent())
+                            .questionAnswerList(questionRepository.findAnswersForQuestion(question).stream().map(QuestionAnswer::questionAnswerDtoFromQuestionAnswer).collect(Collectors.toList()))
+                            .build());
         });
-
         return questionDtos;
     }
+
 }

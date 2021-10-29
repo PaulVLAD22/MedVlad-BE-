@@ -34,14 +34,7 @@ public class QuestionController {
 
     @PostMapping("/admin/acceptQuestion")
     public ResponseEntity<HttpStatus> acceptQuestion(@RequestParam int id, @RequestParam String comment, @RequestParam boolean verdict) {
-        String adminUsername;
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof UserDetails) {
-            adminUsername = ((UserDetails) principal).getUsername();
-        } else {
-            adminUsername = principal.toString();
-        }
+        String adminUsername = getCurrentUsername();
         try {
             questionService.acceptQuestion(id, adminUsername, comment, verdict);
             return new ResponseEntity(HttpStatus.OK);
@@ -54,14 +47,7 @@ public class QuestionController {
     public ResponseEntity<HttpStatus> postQuestion(@RequestParam String content) {
         log.info("Post Question");
 
-        String userName;
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof UserDetails) {
-            userName = ((UserDetails) principal).getUsername();
-        } else {
-            userName = principal.toString();
-        }
+        String userName = getCurrentUsername();
 
         try {
             questionService.postQuestion(userName, content);
@@ -69,6 +55,14 @@ public class QuestionController {
         } catch (Exception e) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("getQuestionsForUser")
+    public List<QuestionDto> getQuestionsForUser(String username){
+        if (username == null){
+            username = getCurrentUsername();
+        }
+        return questionService.getQuestionsForUser(username);
     }
 
     @GetMapping("getQuestions")
@@ -79,5 +73,18 @@ public class QuestionController {
     @GetMapping("getInactiveQuestions")
     public List<Question> getInactiveQuestions(){
         return questionService.getUncheckedQuestions();
+    }
+
+    private String getCurrentUsername(){
+        String username;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        log.info(username);
+        return username;
     }
 }
