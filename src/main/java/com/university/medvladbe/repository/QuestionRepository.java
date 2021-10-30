@@ -13,8 +13,9 @@ import java.util.List;
 
 @Repository
 public interface QuestionRepository extends JpaRepository<Question,Long> {
+    List<Question> getQuestionByCheckedTrueAndAdmin_Username(String username);
 
-    @Query("SELECT qr.question FROM QuestionResult qr WHERE qr.verdict=true")
+    @Query("SELECT qr FROM Question qr WHERE qr.verdict=true")
     List<Question> findActiveQuestions();
 
     @Query("SELECT qa from QuestionAnswer qa where qa.question= :question")

@@ -37,9 +37,7 @@ public class User {
     @ColumnDefault("0")
     private long token;
     @ColumnDefault("0")
-    private int adminPoints=0;
-    @ColumnDefault("0")
-    private int doctorPoints=0;
+    private int points=0;
     private Date dateOfRegistration;
 
     public UserDto userDtoFromUser() {
@@ -49,8 +47,7 @@ public class User {
                 .lastName(this.getLastName())
                 .active(this.isActive())
                 .dateOfRegistration(this.getDateOfRegistration())
-                .adminPoints(this.getAdminPoints())
-                .doctorPoints(this.getDoctorPoints())
+                .points(this.points)
                 .profilePicture(this.getProfilePicture())
                 .licensePicture(this.getLicensePicture())
                 .role(this.getRole())

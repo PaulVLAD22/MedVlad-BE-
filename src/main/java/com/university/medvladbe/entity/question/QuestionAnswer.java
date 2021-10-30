@@ -23,7 +23,6 @@ public class QuestionAnswer {
     private long id;
     @ManyToOne
     private Question question;
-    //TODO:: s ar putea sa vrei questionResult aici, nu question
     @ManyToOne
     private User doctor;
     private int numberOfLikes;

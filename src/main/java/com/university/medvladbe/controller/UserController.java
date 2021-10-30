@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.university.medvladbe.dto.AdminHistoryDto;
 import com.university.medvladbe.dto.QuestionDto;
 import com.university.medvladbe.dto.UserDto;
 import com.university.medvladbe.entity.account.Role;
@@ -103,10 +104,16 @@ public class UserController {
         //TODO:: ii tirmiti link care face cererea asta prin email dupa ce apasa pe register
     }
 
-    @GetMapping("/admin/getRegistrationResults")
-    public List<RegistrationResult> getRegistrationResults(){
+    @GetMapping("/getUserByUsername")
+    public UserDto getUserByUsername(@RequestParam String username){
+        User user = userService.getUser(username);
+        return user.userDtoFromUser();
+    }
+
+    @GetMapping("/admin/getAdminHistory")
+    public AdminHistoryDto getAdminHistory(){
         String adminUsername = getCurrentUsername();
-        return userService.getRegistrationResultsByAdmin(adminUsername);
+        return userService.getAdminHistory(adminUsername);
     }
     @GetMapping("/admin/getInactiveUsers")
     public List<UserDto> getInactiveUsers() {

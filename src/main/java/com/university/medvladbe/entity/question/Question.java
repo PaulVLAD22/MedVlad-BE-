@@ -26,6 +26,11 @@ public class Question {
     private String content;
     private boolean checked;
 
+    private boolean verdict=false;
+    private String comment;
+    @ManyToOne
+    private User admin;
+
     public QuestionDto questionDtoFromQuestion() {
         return
                 QuestionDto.builder()
@@ -33,4 +38,5 @@ public class Question {
                         .content(this.getContent())
                         .build();
     }
+
 }

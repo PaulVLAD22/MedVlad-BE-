@@ -1,13 +1,16 @@
 package com.university.medvladbe.service;
 
+import com.university.medvladbe.dto.AdminHistoryDto;
 import com.university.medvladbe.dto.QuestionDto;
 import com.university.medvladbe.dto.UserDto;
 import com.university.medvladbe.entity.account.DefinedRole;
 import com.university.medvladbe.entity.account.Role;
 import com.university.medvladbe.entity.account.User;
+import com.university.medvladbe.entity.question.Question;
 import com.university.medvladbe.entity.registration.RegistrationResult;
 import com.university.medvladbe.exception.BadLogin;
 import com.university.medvladbe.exception.UserNotActive;
+import com.university.medvladbe.repository.QuestionRepository;
 import com.university.medvladbe.repository.RegistrationResultRepository;
 import com.university.medvladbe.repository.RoleRepository;
 import com.university.medvladbe.repository.UserRepository;
@@ -37,6 +40,7 @@ import java.util.Optional;
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final QuestionRepository questionRepository;
     private final RegistrationResultRepository registrationResultRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -83,13 +87,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         List<User> inactiveUsers = userRepository.findUserByActiveFalse();
         return TransformationMethods.userListToUserDtoList(inactiveUsers);
     }
-    public List<RegistrationResult> getRegistrationResultsByAdmin(String adminUsername){
-        User admin = userRepository.findByUsername(adminUsername);
-        return registrationResultRepository.findAllByAdmin(admin);
+    public AdminHistoryDto getAdminHistory(String adminUsername){
+        List <RegistrationResult> registrationResults = registrationResultRepository.findAllByAdmin_Username(adminUsername);
+        List <Question> questions = questionRepository.getQuestionByCheckedTrueAndAdmin_Username(adminUsername);
+        return AdminHistoryDto.builder().questions(questions).registrationResultList(registrationResults).build();
     }
 
     public UserDto getInactiveDoctors() {
-        return userRepository.findFirstByActiveFalse().userDtoFromUser();
+        try {
+            return userRepository.findFirstByActiveFalse().userDtoFromUser();
+        }catch (Exception e){
+            return UserDto.builder().build();
+        }
     }
 
     public User getUser(String username) {
