@@ -87,4 +87,15 @@ public class QuestionController {
         log.info(username);
         return username;
     }
+
+    @PostMapping("/doctor/postQuestionAnswer")
+    public void postQuestionAnswer(@RequestParam long questionId,@RequestParam String content){
+        log.info(content);
+        String doctorUsername = getCurrentUsername();
+        questionService.postQuestionAnswer(questionId,doctorUsername,content);
+    }
+    @PostMapping("/doctor/likeQuestionAnswer")
+    public void likeQuestionAnswer(@RequestParam long questionAnswerId){
+        questionService.likeQuestionAnswer(questionAnswerId);
+    }
 }

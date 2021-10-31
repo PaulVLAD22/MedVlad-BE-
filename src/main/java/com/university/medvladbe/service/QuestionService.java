@@ -4,6 +4,7 @@ import com.university.medvladbe.dto.QuestionDto;
 import com.university.medvladbe.entity.account.User;
 import com.university.medvladbe.entity.question.Question;
 import com.university.medvladbe.entity.question.QuestionAnswer;
+import com.university.medvladbe.repository.QuestionAnswerRepository;
 import com.university.medvladbe.repository.QuestionRepository;
 import com.university.medvladbe.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -20,13 +21,16 @@ import java.util.stream.Collectors;
 @Slf4j
 public class QuestionService {
     private QuestionRepository questionRepository;
+    private QuestionAnswerRepository questionAnswerRepository;
     private UserRepository userRepository;
 
     @Autowired
     public QuestionService(QuestionRepository questionRepository,
 
-                           UserRepository userRepository) {
+                           UserRepository userRepository,
+                           QuestionAnswerRepository questionAnswerRepository) {
         this.questionRepository = questionRepository;
+        this.questionAnswerRepository = questionAnswerRepository;
         this.userRepository = userRepository;
     }
 
@@ -74,18 +78,38 @@ public class QuestionService {
         return questionListToQuestionDtoList(questions);
     }
 
+    public void postQuestionAnswer(long questionId, String doctorUsername, String content) {
+        Question question = questionRepository.findById(questionId).get();// poate nu e ok
+
+        QuestionAnswer questionAnswer = QuestionAnswer.builder()
+                .question(question)
+                .doctor(userRepository.findByUsername(doctorUsername))
+                .content(content).build();
+        questionAnswerRepository.save(questionAnswer);
+    }
+
     private List<QuestionDto> questionListToQuestionDtoList(List<Question> questions) {
         List<QuestionDto> questionDtos = new ArrayList<>();
 
         questions.forEach(question -> {
             questionDtos.add(
                     QuestionDto.builder()
+                            .id(question.getId())
                             .userDto(question.getUser().userDtoFromUser())
                             .content(question.getContent())
                             .questionAnswerList(questionRepository.findAnswersForQuestion(question).stream().map(QuestionAnswer::questionAnswerDtoFromQuestionAnswer).collect(Collectors.toList()))
                             .build());
         });
         return questionDtos;
+    }
+
+    public void likeQuestionAnswer(long questionAnswerId){
+        QuestionAnswer questionAnswer = questionAnswerRepository.findById(questionAnswerId).get();
+        //TODO:: VEZI CUM FACI SA POATA DA LIKE DOAR ODATA
+        // faci o tabela doctor_questionanswer_liked si ti minte la ce a dat like is in functie de asta
+        // lasi butonul sa fie apasat sau nu
+        questionAnswer.setNumberOfLikes(questionAnswer.getNumberOfLikes()+1);
+        questionAnswerRepository.save(questionAnswer);
     }
 
 }

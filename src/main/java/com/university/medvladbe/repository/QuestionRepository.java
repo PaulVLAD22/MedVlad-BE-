@@ -23,5 +23,4 @@ public interface QuestionRepository extends JpaRepository<Question,Long> {
 
     @Query("Select q from Question q where q.checked=false")
     List<Question> findUncheckedQuestions();
-
 }

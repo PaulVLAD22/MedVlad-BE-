@@ -13,6 +13,7 @@ import javax.persistence.*;
 @Data
 @Builder
 public class QuestionAnswerDto {
+    private long id;
     private UserDto doctor;
     private int numberOfLikes;
     private String content;

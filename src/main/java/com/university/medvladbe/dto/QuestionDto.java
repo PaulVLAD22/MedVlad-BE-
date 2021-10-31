@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class QuestionDto {
+    private long id;
     private UserDto userDto;
     private String content;
     private List<QuestionAnswerDto> questionAnswerList;

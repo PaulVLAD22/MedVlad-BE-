@@ -25,11 +25,12 @@ public class QuestionAnswer {
     private Question question;
     @ManyToOne
     private User doctor;
-    private int numberOfLikes;
+    private int numberOfLikes=0;
     private String content;
 
     public QuestionAnswerDto questionAnswerDtoFromQuestionAnswer() {
         return QuestionAnswerDto.builder()
+                .id(this.getId())
                 .numberOfLikes(this.getNumberOfLikes())
                 .doctor(this.doctor.userDtoFromUser())
                 .content(this.getContent())
