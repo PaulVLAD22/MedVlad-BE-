@@ -1,5 +1,6 @@
 package com.university.medvladbe.repository;
 
+import com.university.medvladbe.entity.account.Role;
 import com.university.medvladbe.entity.account.User;
 import com.university.medvladbe.entity.question.Question;
 import org.springframework.context.annotation.Bean;
@@ -15,5 +16,5 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User,Long> {
     User findByUsername(String username);
     List<User> findUserByActiveFalse();
-    User findFirstByActiveFalse();
+    User findFirstByActiveFalseAndRole(Role role);
 }

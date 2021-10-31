@@ -28,6 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -58,6 +59,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .email(email)
                 .role(userRole)
                 .licensePicture(licensePicture)
+                .dateOfRegistration(new Date(System.currentTimeMillis()))
                 .build();
 
         userRepository.save(user);
@@ -94,8 +96,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public UserDto getInactiveDoctors() {
+        Role role = roleRepository.findRoleByName(DefinedRole.DOCTOR);
         try {
-            return userRepository.findFirstByActiveFalse().userDtoFromUser();
+            return userRepository.findFirstByActiveFalseAndRole(role).userDtoFromUser();
         }catch (Exception e){
             return UserDto.builder().build();
         }

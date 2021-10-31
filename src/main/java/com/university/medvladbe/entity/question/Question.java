@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.sql.Date;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,6 +32,7 @@ public class Question {
     private String comment;
     @ManyToOne
     private User admin;
+    private Date postingDate;
 
     public QuestionDto questionDtoFromQuestion() {
         return
