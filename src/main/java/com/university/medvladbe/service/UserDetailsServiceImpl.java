@@ -84,6 +84,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
     }
+    public void updateFirstName(String username, String firstName){
+        User user = userRepository.findByUsername(username);
+        user.setFirstName(firstName);
+        userRepository.save(user);
+    }
+    public void updateLastName(String username, String lastName){
+        User user = userRepository.findByUsername(username);
+        user.setLastName(lastName);
+        userRepository.save(user);
+    }
+    public void updateProfilePicture(String username, String profilePicture){
+        User user = userRepository.findByUsername(username);
+        user.setProfilePicture(profilePicture);
+        userRepository.save(user);
+    }
 
     public List<UserDto> getInactiveUsers() {
         List<User> inactiveUsers = userRepository.findUserByActiveFalse();
@@ -107,6 +122,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public User getUser(String username) {
         return userRepository.findByUsername(username);
     }
+
 
 
     @Override

@@ -105,16 +105,17 @@ public class UserController {
     }
 
     @GetMapping("/getUserByUsername")
-    public UserDto getUserByUsername(@RequestParam String username){
+    public UserDto getUserByUsername(@RequestParam String username) {
         User user = userService.getUser(username);
         return user.userDtoFromUser();
     }
 
     @GetMapping("/admin/getAdminHistory")
-    public AdminHistoryDto getAdminHistory(){
+    public AdminHistoryDto getAdminHistory() {
         String adminUsername = getCurrentUsername();
         return userService.getAdminHistory(adminUsername);
     }
+
     @GetMapping("/admin/getInactiveUsers")
     public List<UserDto> getInactiveUsers() {
         return userService.getInactiveUsers();
@@ -129,12 +130,29 @@ public class UserController {
     @PostMapping("/admin/acceptUserRegistration")
     public void acceptUserRegistration(@RequestParam String username,
                                        @RequestParam String comment,
-                                       @RequestParam boolean verdict){
+                                       @RequestParam boolean verdict) {
         String adminUsername = getCurrentUsername();
-        System.out.println(username+" "+comment+" "+verdict);
-        userService.acceptUserRegistration(adminUsername,username,comment,verdict);
+        System.out.println(username + " " + comment + " " + verdict);
+        userService.acceptUserRegistration(adminUsername, username, comment, verdict);
     }
-    private String getCurrentUsername(){
+
+    @PutMapping("/updateFirstName")
+    public void updateFirstName(@RequestParam String firstName) {
+        userService.updateFirstName(getCurrentUsername(), firstName);
+    }
+
+    @PutMapping("/updateLastName")
+    public void updateLastName(@RequestParam String lastName) {
+        userService.updateLastName(getCurrentUsername(), lastName);
+    }
+
+    @PutMapping("/updateProfilePicture")
+    public void updateProfilePicture(@RequestParam String profilePicture) {
+        userService.updateProfilePicture(getCurrentUsername(), profilePicture);
+    }
+
+
+    private String getCurrentUsername() {
         String username;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

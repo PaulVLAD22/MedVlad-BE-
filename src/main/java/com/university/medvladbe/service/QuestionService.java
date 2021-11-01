@@ -78,6 +78,8 @@ public class QuestionService {
         return questionListToQuestionDtoList(questions);
     }
 
+
+
     public void postQuestionAnswer(long questionId, String doctorUsername, String content) {
         Question question = questionRepository.findById(questionId).get();// poate nu e ok
 
