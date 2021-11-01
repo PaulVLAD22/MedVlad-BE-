@@ -1,25 +1,20 @@
 package com.university.medvladbe.service;
 
 import com.university.medvladbe.dto.AdminHistoryDto;
-import com.university.medvladbe.dto.QuestionDto;
 import com.university.medvladbe.dto.UserDto;
 import com.university.medvladbe.entity.account.DefinedRole;
 import com.university.medvladbe.entity.account.Role;
 import com.university.medvladbe.entity.account.User;
 import com.university.medvladbe.entity.question.Question;
 import com.university.medvladbe.entity.registration.RegistrationResult;
-import com.university.medvladbe.exception.BadLogin;
 import com.university.medvladbe.exception.UserNotActive;
 import com.university.medvladbe.repository.QuestionRepository;
 import com.university.medvladbe.repository.RegistrationResultRepository;
 import com.university.medvladbe.repository.RoleRepository;
 import com.university.medvladbe.repository.UserRepository;
-import com.university.medvladbe.util.TransformationMethods;
+import com.university.medvladbe.util.UserMethods;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,7 +27,6 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -64,7 +58,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         userRepository.save(user);
     }
-    //TODO:: Pune functii in tranformation methods si foloseste-le cand trebuie (inlocuieste cod)
 
     public void acceptUserRegistration(String adminUsername, String username,
                                        String comment, boolean verdict) {
@@ -102,7 +95,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public List<UserDto> getInactiveUsers() {
         List<User> inactiveUsers = userRepository.findUserByActiveFalse();
-        return TransformationMethods.userListToUserDtoList(inactiveUsers);
+        return UserMethods.userListToUserDtoList(inactiveUsers);
     }
     public AdminHistoryDto getAdminHistory(String adminUsername){
         List <RegistrationResult> registrationResults = registrationResultRepository.findAllByAdmin_Username(adminUsername);

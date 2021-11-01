@@ -26,7 +26,6 @@ public class QuestionService {
 
     @Autowired
     public QuestionService(QuestionRepository questionRepository,
-
                            UserRepository userRepository,
                            QuestionAnswerRepository questionAnswerRepository) {
         this.questionRepository = questionRepository;

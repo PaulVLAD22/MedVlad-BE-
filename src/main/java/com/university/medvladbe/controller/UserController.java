@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.university.medvladbe.util.UserMethods.getCurrentUsername;
 import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -42,8 +43,7 @@ public class UserController {
     private UserDetailsServiceImpl userService;
 
     @Autowired
-    public UserController(UserDetailsServiceImpl userService
-    ) {
+    public UserController(UserDetailsServiceImpl userService) {
         this.userService = userService;
     }
 
@@ -152,15 +152,5 @@ public class UserController {
     }
 
 
-    private String getCurrentUsername() {
-        String username;
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
-        return username;
-    }
 }

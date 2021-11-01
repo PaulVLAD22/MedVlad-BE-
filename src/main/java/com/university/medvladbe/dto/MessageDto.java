@@ -1,4 +1,4 @@
-package com.university.medvladbe.entity.message;
+package com.university.medvladbe.dto;
 
 import com.university.medvladbe.entity.account.User;
 import lombok.AllArgsConstructor;
@@ -6,23 +6,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.sql.Timestamp;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name="message")
-public class Message {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    @ManyToOne
-    private User sender;
-    @ManyToOne
-    private User receiver;
+public class MessageDto {
+    private String senderUsername;
+    private String receiverUsername;
     private String content;
     private Timestamp timeOfSending;
 }
