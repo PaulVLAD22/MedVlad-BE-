@@ -30,12 +30,17 @@ public class MessageController {
         this.messageService = messageService;
     }
 
-    @GetMapping("/getMessages")
-    public List<MessageDto> getMessages(){
-        return messageService.getMessagesForUser(getCurrentUsername());
+    @GetMapping("/getLastMessages")
+    public List<MessageDto> getLastMessages(){
+        return messageService.getLastMessagesForUser(getCurrentUsername());
     }
     @PostMapping("/postMessage")
     public void postMessage(@RequestParam String content, @RequestParam String receiverUsername){
         messageService.postMessage(getCurrentUsername(),content,receiverUsername);
+    }
+    @GetMapping("/getMessagesWithUser")
+    public List<MessageDto> getMessagesWithUser(@RequestParam String username2){
+        return messageService.getMessagesWithUser(getCurrentUsername(),username2);
+
     }
 }
