@@ -20,7 +20,7 @@ public class RegistrationResult {
     private long id;
     @ManyToOne
     private User admin;
-    @ManyToOne
+    @OneToOne
     private User user;
     private boolean verdict;
     private String comment;

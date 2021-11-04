@@ -1,5 +1,6 @@
 package com.university.medvladbe;
 
+import com.university.medvladbe.service.UserDetailsServiceImpl;
 import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.*;
 import org.springframework.context.annotation.Bean;

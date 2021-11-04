@@ -1,14 +1,21 @@
 package com.university.medvladbe.entity.account;
 
 import com.university.medvladbe.dto.UserDto;
+import com.university.medvladbe.entity.message.Message;
+import com.university.medvladbe.entity.question.Question;
+import com.university.medvladbe.entity.question.QuestionAnswer;
+import com.university.medvladbe.entity.registration.RegistrationResult;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import static javax.persistence.FetchType.EAGER;
 
@@ -21,7 +28,7 @@ import static javax.persistence.FetchType.EAGER;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
     @Column(unique = true)
     private String email;
     private String firstName;
@@ -39,6 +46,23 @@ public class User {
     @ColumnDefault("0")
     private int points=0;
     private Date dateOfRegistration;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "sender")
+    private List<Message> messagesSent;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "receiver")
+    private List<Message> messagesReceived;
+
+    @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "user")
+    private RegistrationResult registrationResult;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
+    private List<Question> questions;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "doctor")
+    private List<QuestionAnswer> questionAnswers;
+
+
 
     public UserDto userDtoFromUser() {
         return UserDto.builder()

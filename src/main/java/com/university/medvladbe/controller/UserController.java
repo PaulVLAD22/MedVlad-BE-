@@ -151,6 +151,11 @@ public class UserController {
         userService.updateProfilePicture(getCurrentUsername(), profilePicture);
     }
 
+    @DeleteMapping("/admin/deleteUser")
+    public void adminDeleteUser(@RequestParam String username){
+        userService.deleteUser(username);
+    }
+
 
 
 }

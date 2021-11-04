@@ -22,6 +22,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -75,8 +76,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         } else {
             userRepository.delete(user);
         }
-
     }
+
+    public void deleteUser(String username){
+        userRepository.delete(userRepository.findByUsername(username));
+    }
+
     public void updateFirstName(String username, String firstName){
         User user = userRepository.findByUsername(username);
         user.setFirstName(firstName);
