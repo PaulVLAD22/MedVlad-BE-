@@ -47,19 +47,23 @@ public class MessageService {
     }
 
     public List<MessageDto> getLastMessagesForUser(String username) {
+        log.info("ADMIPP");
         List<Message> messages = messageRepository.findAllBySenderOrReceiver
                 (userRepository.findByUsername(username), userRepository.findByUsername(username));
         List<MessageDto> messageDtos = new ArrayList<>();
         Set<String> interactedWithUsers = new HashSet<>();
+        log.info("PAPA");
         messages.forEach(message ->
         {
             interactedWithUsers.add(message.getReceiver().getUsername());
             interactedWithUsers.add(message.getSender().getUsername());
         });
+        log.info("ADA");
 
         interactedWithUsers.remove(UserMethods.getCurrentUsername());
 
         for (String interactedWithUser : interactedWithUsers) {
+
             Message latestMessage = messages.stream()
                     .filter(message -> message.getReceiver().getUsername().equals(interactedWithUser)
                             || message.getSender().getUsername().equals(interactedWithUser))
@@ -77,6 +81,7 @@ public class MessageService {
     }
 
     public void postMessage(String senderUsername, String content, String receiverUsername) {
+        log.info("COX");
         Message message = Message.builder()
                 .content(content)
                 .sender(userRepository.findByUsername(senderUsername))

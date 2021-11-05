@@ -16,6 +16,6 @@ import java.util.List;
 @Data
 @Builder
 public class AdminHistoryDto {
-    private List<RegistrationResult> registrationResultList;
-    private List<Question> questions;
+    private List<RegistrationResultDto> registrationResultList;
+    private List<QuestionDto> questions;
 }

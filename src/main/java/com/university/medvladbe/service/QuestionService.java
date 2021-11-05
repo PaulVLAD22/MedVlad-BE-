@@ -63,8 +63,9 @@ public class QuestionService {
         questionRepository.save(question);
     }
 
-    public List<Question> getUncheckedQuestions() {
-        return questionRepository.findUncheckedQuestions();
+    public List<QuestionDto> getUncheckedQuestions() {
+        List<Question> questions = questionRepository.findUncheckedQuestions();
+        return questionListToQuestionDtoList(questions);
     }
 
     public List<QuestionDto> getQuestionsForUser(String username) {
@@ -92,7 +93,7 @@ public class QuestionService {
         questionAnswerRepository.save(questionAnswer);
     }
 
-    private List<QuestionDto> questionListToQuestionDtoList(List<Question> questions) {
+    public List<QuestionDto> questionListToQuestionDtoList(List<Question> questions) {
         List<QuestionDto> questionDtos = new ArrayList<>();
 
         questions.forEach(question -> {

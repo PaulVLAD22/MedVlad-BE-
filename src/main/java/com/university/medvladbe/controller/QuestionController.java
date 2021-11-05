@@ -71,7 +71,7 @@ public class QuestionController {
     }
 
     @GetMapping("getInactiveQuestions")
-    public List<Question> getInactiveQuestions(){
+    public List<QuestionDto> getInactiveQuestions(){
         return questionService.getUncheckedQuestions();
     }
 

@@ -1,5 +1,6 @@
 package com.university.medvladbe.entity.registration;
 
+import com.university.medvladbe.dto.RegistrationResultDto;
 import com.university.medvladbe.entity.account.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,8 +21,17 @@ public class RegistrationResult {
     private long id;
     @ManyToOne
     private User admin;
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private User user;
     private boolean verdict;
     private String comment;
+
+    public RegistrationResultDto registrationResultToDto(){
+        return RegistrationResultDto.builder()
+                .user(user.userDtoFromUser())
+                .admin(admin.userDtoFromUser())
+                .verdict(verdict)
+                .comment(comment)
+                .build();
+    }
 }

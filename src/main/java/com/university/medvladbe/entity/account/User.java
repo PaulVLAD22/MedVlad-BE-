@@ -53,8 +53,11 @@ public class User {
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "receiver")
     private List<Message> messagesReceived;
 
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "admin")
+    private List<RegistrationResult> registrationResultAdmin;
+
     @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "user")
-    private RegistrationResult registrationResult;
+    private RegistrationResult registrationResultUser;
 
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
     private List<Question> questions;

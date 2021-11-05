@@ -1,11 +1,14 @@
 package com.university.medvladbe.service;
 
 import com.university.medvladbe.dto.AdminHistoryDto;
+import com.university.medvladbe.dto.QuestionDto;
+import com.university.medvladbe.dto.RegistrationResultDto;
 import com.university.medvladbe.dto.UserDto;
 import com.university.medvladbe.entity.account.DefinedRole;
 import com.university.medvladbe.entity.account.Role;
 import com.university.medvladbe.entity.account.User;
 import com.university.medvladbe.entity.question.Question;
+import com.university.medvladbe.entity.question.QuestionAnswer;
 import com.university.medvladbe.entity.registration.RegistrationResult;
 import com.university.medvladbe.exception.UserNotActive;
 import com.university.medvladbe.repository.QuestionRepository;
@@ -28,6 +31,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +43,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final QuestionRepository questionRepository;
     private final RegistrationResultRepository registrationResultRepository;
     private final PasswordEncoder passwordEncoder;
+
+
+    public List<QuestionDto> questionListToQuestionDtoList(List<Question> questions) {
+        List<QuestionDto> questionDtos = new ArrayList<>();
+
+        questions.forEach(question -> {
+            questionDtos.add(
+                    QuestionDto.builder()
+                            .id(question.getId())
+                            .userDto(question.getUser().userDtoFromUser())
+                            .content(question.getContent())
+                            .questionAnswerList(questionRepository.findAnswersForQuestion(question).stream().map(QuestionAnswer::questionAnswerDtoFromQuestionAnswer).collect(Collectors.toList()))
+                            .build());
+        });
+        return questionDtos;
+    }
+
 
     public void registerUser(String email, String username,
                              String password, String role, String licensePicture) {
@@ -105,7 +126,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public AdminHistoryDto getAdminHistory(String adminUsername){
         List <RegistrationResult> registrationResults = registrationResultRepository.findAllByAdmin_Username(adminUsername);
         List <Question> questions = questionRepository.getQuestionByCheckedTrueAndAdmin_Username(adminUsername);
-        return AdminHistoryDto.builder().questions(questions).registrationResultList(registrationResults).build();
+        List <RegistrationResultDto> registrationResultDtos = new ArrayList<>();
+        registrationResults.forEach(registrationResult -> {
+            registrationResultDtos.add(registrationResult.registrationResultToDto());
+        });
+        List <QuestionDto> questionDtos = questionListToQuestionDtoList(questions);
+        return AdminHistoryDto.builder().questions(questionDtos).registrationResultList(registrationResultDtos).build();
     }
 
     public UserDto getInactiveDoctors() {
