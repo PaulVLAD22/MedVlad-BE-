@@ -35,6 +35,10 @@ public class QuestionService {
         this.userRepository = userRepository;
     }
 
+    public void deleteQuestionAnswer(long questionAnswerId){
+        questionAnswerRepository.deleteById(questionAnswerId);
+    }
+
     public void acceptQuestion(long id, String adminUsername, String comment, boolean verdict) throws NotFound {
         User admin = userRepository.findByUsername(adminUsername);
         Optional<Question> questionToAccept = questionRepository.findById(id);
@@ -102,6 +106,7 @@ public class QuestionService {
                             .id(question.getId())
                             .userDto(question.getUser().userDtoFromUser())
                             .content(question.getContent())
+                            .postingDate(question.getPostingDate())
                             .questionAnswerList(questionRepository.findAnswersForQuestion(question).stream().map(QuestionAnswer::questionAnswerDtoFromQuestionAnswer).collect(Collectors.toList()))
                             .build());
         });
