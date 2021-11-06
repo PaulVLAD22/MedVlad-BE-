@@ -98,6 +98,26 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             userRepository.delete(user);
         }
     }
+    public void acceptUserRegistration(String adminUsername,String username, String firstName,
+                                       String lastName, String comment, boolean verdict){
+        User admin = userRepository.findByUsername(adminUsername);
+        User user = userRepository.findByUsername(username);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        if (verdict) {
+            user.setActive(true);
+            RegistrationResult registrationResult = RegistrationResult.builder()
+                    .user(user)
+                    .admin(admin)
+                    .comment(comment)
+                    .verdict(true)
+                    .build();
+            registrationResultRepository.save(registrationResult);
+            userRepository.save(user);
+        } else {
+            userRepository.delete(user);
+        }
+    }
 
     public void deleteUser(String username){
         userRepository.delete(userRepository.findByUsername(username));

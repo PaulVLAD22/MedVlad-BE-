@@ -23,6 +23,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
 import static com.university.medvladbe.util.UserMethods.getCurrentUsername;
 import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
@@ -106,9 +108,14 @@ public class UserController {
 
     @GetMapping("/getUserByUsername")
     public UserDto getUserByUsername(@RequestParam String username) {
-        User user = userService.getUser(username);
-        return user.userDtoFromUser();
+        try {
+            User user = userService.getUser(username);
+            return user.userDtoFromUser();
+        }catch(NullPointerException e){
+            throw new ResponseStatusException(NOT_FOUND, "Unable to find resource");
+        }
     }
+
 
     @GetMapping("/admin/getAdminHistory")
     public AdminHistoryDto getAdminHistory() {
@@ -134,6 +141,16 @@ public class UserController {
         String adminUsername = getCurrentUsername();
         System.out.println(username + " " + comment + " " + verdict);
         userService.acceptUserRegistration(adminUsername, username, comment, verdict);
+    }
+    @PostMapping("/admin/acceptDoctorRegistration")
+    public void acceptDoctorRegistration(@RequestParam String username,
+                                         @RequestParam String firstName,
+                                         @RequestParam String lastName,
+                                         @RequestParam String comment,
+                                         @RequestParam boolean verdict){
+        String adminUsername = getCurrentUsername();
+        System.out.println(username + " " + comment + " " + verdict);
+        userService.acceptUserRegistration(adminUsername,username,firstName,lastName, comment, verdict);
     }
 
     @PutMapping("/updateFirstName")
