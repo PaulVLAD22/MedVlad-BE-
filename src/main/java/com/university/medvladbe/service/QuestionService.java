@@ -35,6 +35,9 @@ public class QuestionService {
         this.userRepository = userRepository;
     }
 
+    public void deleteQuestion(long questionId){
+        questionRepository.deleteById(questionId);
+    }
     public void deleteQuestionAnswer(long questionAnswerId){
         questionAnswerRepository.deleteById(questionAnswerId);
     }

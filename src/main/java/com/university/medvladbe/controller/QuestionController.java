@@ -99,4 +99,8 @@ public class QuestionController {
     public void deleteQuestionAnswer(@RequestParam long questionAnswerId){
         questionService.deleteQuestionAnswer(questionAnswerId);
     }
+    @DeleteMapping("/admin/deleteQuestion")
+    public void deleteQuestion(@RequestParam long questionId){
+        questionService.deleteQuestion(questionId);
+    }
 }
