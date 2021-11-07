@@ -2,6 +2,7 @@ package com.university.medvladbe.controller;
 
 import com.university.medvladbe.dto.QuestionDto;
 import com.university.medvladbe.entity.question.Question;
+import com.university.medvladbe.exception.AlreadyLikedComment;
 import com.university.medvladbe.service.QuestionService;
 import com.university.medvladbe.service.UserDetailsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -92,8 +93,14 @@ public class QuestionController {
         questionService.postQuestionAnswer(questionId,doctorUsername,content);
     }
     @PostMapping("/doctor/likeQuestionAnswer")
-    public void likeQuestionAnswer(@RequestParam long questionAnswerId){
-        questionService.likeQuestionAnswer(questionAnswerId);
+    public ResponseEntity likeQuestionAnswer(@RequestParam long questionAnswerId){
+        try {
+            String currentUsername = getCurrentUsername();
+            questionService.likeQuestionAnswer(currentUsername, questionAnswerId);
+            return ResponseEntity.ok().build();
+        }catch (AlreadyLikedComment e){
+            return ResponseEntity.status(452).build();
+        }
     }
     @DeleteMapping("/admin/deleteQuestionAnswer")
     public void deleteQuestionAnswer(@RequestParam long questionAnswerId){

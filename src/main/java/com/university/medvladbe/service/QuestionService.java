@@ -4,6 +4,7 @@ import com.university.medvladbe.dto.QuestionDto;
 import com.university.medvladbe.entity.account.User;
 import com.university.medvladbe.entity.question.Question;
 import com.university.medvladbe.entity.question.QuestionAnswer;
+import com.university.medvladbe.exception.AlreadyLikedComment;
 import com.university.medvladbe.repository.QuestionAnswerRepository;
 import com.university.medvladbe.repository.QuestionRepository;
 import com.university.medvladbe.repository.UserRepository;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -116,13 +118,18 @@ public class QuestionService {
         return questionDtos;
     }
 
-    public void likeQuestionAnswer(long questionAnswerId){
+    public void likeQuestionAnswer(String username, long questionAnswerId){
         QuestionAnswer questionAnswer = questionAnswerRepository.findById(questionAnswerId).get();
-        //TODO:: VEZI CUM FACI SA POATA DA LIKE DOAR ODATA
-        // faci o tabela doctor_questionanswer_liked si ti minte la ce a dat like is in functie de asta
-        // lasi butonul sa fie apasat sau nu
-        questionAnswer.setNumberOfLikes(questionAnswer.getNumberOfLikes()+1);
-        questionAnswerRepository.save(questionAnswer);
+        User user = userRepository.findByUsername(username);
+
+        if (!user.getLikedAnswers().contains(questionAnswer)) {
+            user.getLikedAnswers().add(questionAnswer);
+            questionAnswer.setNumberOfLikes(questionAnswer.getNumberOfLikes() + 1);
+            userRepository.save(user);
+        }
+        else{
+            throw new AlreadyLikedComment();
+        }
     }
 
 }

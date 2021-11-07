@@ -9,6 +9,10 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,6 +31,9 @@ public class QuestionAnswer {
     private User doctor;
     private int numberOfLikes=0;
     private String content;
+
+    @ManyToMany(mappedBy = "likedAnswers")
+    private List<User> usersLikingAnswer = new ArrayList<>();
 
     public QuestionAnswerDto questionAnswerDtoFromQuestionAnswer() {
         return QuestionAnswerDto.builder()

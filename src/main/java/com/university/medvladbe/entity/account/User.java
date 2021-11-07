@@ -7,15 +7,14 @@ import com.university.medvladbe.entity.question.QuestionAnswer;
 import com.university.medvladbe.entity.registration.RegistrationResult;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static javax.persistence.FetchType.EAGER;
 
@@ -28,7 +27,7 @@ import static javax.persistence.FetchType.EAGER;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
     @Column(unique = true)
     private String email;
     private String firstName;
@@ -46,6 +45,10 @@ public class User {
     @ColumnDefault("0")
     private int points=0;
     private Date dateOfRegistration;
+
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @Fetch(value= FetchMode.SELECT)
+    List<QuestionAnswer> likedAnswers = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "sender")
     private List<Message> messagesSent;
