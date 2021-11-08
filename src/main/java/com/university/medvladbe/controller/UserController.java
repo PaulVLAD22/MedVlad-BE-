@@ -13,6 +13,7 @@ import com.university.medvladbe.entity.account.Role;
 import com.university.medvladbe.entity.account.User;
 import com.university.medvladbe.entity.question.Question;
 import com.university.medvladbe.entity.registration.RegistrationResult;
+import com.university.medvladbe.exception.EmailOrUsernameAlreadyTaken;
 import com.university.medvladbe.service.EmailService;
 import com.university.medvladbe.service.QuestionService;
 import com.university.medvladbe.service.UserDetailsServiceImpl;
@@ -48,7 +49,7 @@ public class UserController {
     private EmailService emailService;
 
     @Autowired
-    public UserController(UserDetailsServiceImpl userService,EmailService emailService) {
+    public UserController(UserDetailsServiceImpl userService, EmailService emailService) {
         this.userService = userService;
         this.emailService = emailService;
     }
@@ -98,18 +99,19 @@ public class UserController {
     }
 
     @GetMapping("/verifyToken")
-    public ResponseEntity<String> verifyToken(@RequestParam String token){
+    public ResponseEntity<String> verifyToken(@RequestParam String token) {
         try {
             return ResponseEntity.ok(userService.getEmailForToken(token));
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(470).build();//no such user
         }
     }
+
     @PutMapping("/resetPassword")
     public void resetPassword(@RequestParam String email,
                               @RequestParam String password,
-                              @RequestParam String token){
-        userService.resetPassword(email,password,token);
+                              @RequestParam String token) {
+        userService.resetPassword(email, password, token);
     }
 
     @PostMapping("/register")
@@ -119,8 +121,11 @@ public class UserController {
                                        @RequestParam String licensePicture,
                                        @RequestParam String role) {
         log.info(email + username + password + licensePicture + role);
-
-        userService.registerUser(email, username, password, role, licensePicture);
+        try {
+            userService.registerUser(email, username, password, role, licensePicture);
+        } catch (EmailOrUsernameAlreadyTaken e) {
+            return ResponseEntity.status(409).build();//Conflict
+        }
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -129,7 +134,7 @@ public class UserController {
         try {
             User user = userService.getUser(username);
             return user.userDtoFromUser();
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             throw new ResponseStatusException(NOT_FOUND, "Unable to find resource");
         }
     }
@@ -160,15 +165,16 @@ public class UserController {
         System.out.println(username + " " + comment + " " + verdict);
         userService.acceptUserRegistration(adminUsername, username, comment, verdict);
     }
+
     @PostMapping("/admin/acceptDoctorRegistration")
     public void acceptDoctorRegistration(@RequestParam String username,
                                          @RequestParam String firstName,
                                          @RequestParam String lastName,
                                          @RequestParam String comment,
-                                         @RequestParam boolean verdict){
+                                         @RequestParam boolean verdict) {
         String adminUsername = getCurrentUsername();
         System.out.println(username + " " + comment + " " + verdict);
-        userService.acceptUserRegistration(adminUsername,username,firstName,lastName, comment, verdict);
+        userService.acceptUserRegistration(adminUsername, username, firstName, lastName, comment, verdict);
     }
 
     @PutMapping("/updateFirstName")
@@ -187,16 +193,16 @@ public class UserController {
     }
 
     @DeleteMapping("/admin/deleteUser")
-    public void adminDeleteUser(@RequestParam String username){
+    public void adminDeleteUser(@RequestParam String username) {
         userService.deleteUser(username);
     }
 
     @PostMapping("/forgotPassword")
-    public ResponseEntity forgotPassword(@RequestParam String email){
+    public ResponseEntity forgotPassword(@RequestParam String email) {
         try {
             userService.forgotPassword(email);
             return ResponseEntity.ok().build();
-        }catch (MessagingException e ){
+        } catch (MessagingException e) {
             return ResponseEntity.status(470).build();//Messaging error
         }
     }

@@ -10,6 +10,7 @@ import com.university.medvladbe.entity.account.User;
 import com.university.medvladbe.entity.question.Question;
 import com.university.medvladbe.entity.question.QuestionAnswer;
 import com.university.medvladbe.entity.registration.RegistrationResult;
+import com.university.medvladbe.exception.EmailOrUsernameAlreadyTaken;
 import com.university.medvladbe.exception.UserNotActive;
 import com.university.medvladbe.repository.QuestionRepository;
 import com.university.medvladbe.repository.RegistrationResultRepository;
@@ -93,6 +94,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         Role userRole = roleRepository.findRoleByName(DefinedRole.valueOf(role));
 
+        List <User> users = userRepository.findAll();
+        List<String> emails = new ArrayList<>();
+        List<String> usernames = new ArrayList<>();
+
+        users.forEach(user->{
+            emails.add(user.getEmail());
+            usernames.add(user.getUsername());
+        });
+        if (emails.contains(email) || usernames.contains(username)){
+            throw new EmailOrUsernameAlreadyTaken();
+        }
+
+
         User user = User.builder()
                 .password(passwordEncoder.encode(password))
                 .username(username)
@@ -108,6 +122,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public void acceptUserRegistration(String adminUsername, String username,
                                        String comment, boolean verdict) {
+        // Asta dureaza mult rau
         User admin = userRepository.findByUsername(adminUsername);
         User user = userRepository.findByUsername(username);
         if (verdict) {
@@ -122,6 +137,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             emailService.sendTextEmail(user.getEmail(),"Welcome to Medvlad","Your account has just been created");
         } else {
             userRepository.delete(user);
+            emailService.sendTextEmail(user.getEmail(),"Account Deletion","Your account has just been deleted by admin "+adminUsername);
         }
     }
     public void acceptUserRegistration(String adminUsername,String username, String firstName,
@@ -140,8 +156,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     .build();
             registrationResultRepository.save(registrationResult);
             userRepository.save(user);
+            emailService.sendTextEmail(user.getEmail(),"Welcome to Medvlad","Your account has just been created");
+
         } else {
             userRepository.delete(user);
+            emailService.sendTextEmail(user.getEmail(),"Account Deletion","Your account has just been deleted by admin "+adminUsername);
         }
     }
 
