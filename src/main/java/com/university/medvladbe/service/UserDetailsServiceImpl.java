@@ -25,7 +25,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -43,7 +43,31 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final QuestionRepository questionRepository;
     private final RegistrationResultRepository registrationResultRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
+    public String getEmailForToken(String token){
+        User user = userRepository.findByToken(token);
+        return user.getEmail();
+    }
+
+    public void resetPassword(String email, String password,String token){
+        log.info(email);
+        System.out.println("COX");
+        User user = userRepository.findByEmail(email);
+        if (user.getToken().equals(token)) {
+            user.setPassword(passwordEncoder.encode(password));
+            user.setToken(UserMethods.generateToken());
+            userRepository.save(user);
+        }
+    }
+
+    public void forgotPassword(String email) throws MessagingException {
+        User user = userRepository.findByEmail(email);
+        String token = user.getToken();
+        String link = "http://localhost:3000/resetPassword/"+token;
+        String emailText = "Access <a href=\""+ link+"\""+">"+link+"</a> to reset you password";
+        emailService.sendHtmlEmail(email,"Password Reset",emailText);
+    }
 
     public List<QuestionDto> questionListToQuestionDtoList(List<Question> questions) {
         List<QuestionDto> questionDtos = new ArrayList<>();
@@ -76,6 +100,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .role(userRole)
                 .licensePicture(licensePicture)
                 .dateOfRegistration(new Date(System.currentTimeMillis()))
+                .token(UserMethods.generateToken())
                 .build();
 
         userRepository.save(user);
@@ -94,6 +119,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     .verdict(true)
                     .build();
             registrationResultRepository.save(registrationResult);
+            emailService.sendTextEmail(user.getEmail(),"Welcome to Medvlad","Your account has just been created");
         } else {
             userRepository.delete(user);
         }

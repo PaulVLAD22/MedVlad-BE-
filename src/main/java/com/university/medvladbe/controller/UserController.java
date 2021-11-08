@@ -13,6 +13,7 @@ import com.university.medvladbe.entity.account.Role;
 import com.university.medvladbe.entity.account.User;
 import com.university.medvladbe.entity.question.Question;
 import com.university.medvladbe.entity.registration.RegistrationResult;
+import com.university.medvladbe.service.EmailService;
 import com.university.medvladbe.service.QuestionService;
 import com.university.medvladbe.service.UserDetailsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.ws.Response;
@@ -43,10 +45,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class UserController {
 
     private UserDetailsServiceImpl userService;
+    private EmailService emailService;
 
     @Autowired
-    public UserController(UserDetailsServiceImpl userService) {
+    public UserController(UserDetailsServiceImpl userService,EmailService emailService) {
         this.userService = userService;
+        this.emailService = emailService;
     }
 
     @GetMapping("token/refresh")
@@ -93,6 +97,21 @@ public class UserController {
         }
     }
 
+    @GetMapping("/verifyToken")
+    public ResponseEntity<String> verifyToken(@RequestParam String token){
+        try {
+            return ResponseEntity.ok(userService.getEmailForToken(token));
+        }catch (Exception e){
+            return ResponseEntity.status(470).build();//no such user
+        }
+    }
+    @PutMapping("/resetPassword")
+    public void resetPassword(@RequestParam String email,
+                              @RequestParam String password,
+                              @RequestParam String token){
+        userService.resetPassword(email,password,token);
+    }
+
     @PostMapping("/register")
     public ResponseEntity registerUser(@RequestParam String email,
                                        @RequestParam String username,
@@ -103,7 +122,6 @@ public class UserController {
 
         userService.registerUser(email, username, password, role, licensePicture);
         return new ResponseEntity(HttpStatus.OK);
-        //TODO:: ii tirmiti link care face cererea asta prin email dupa ce apasa pe register
     }
 
     @GetMapping("/getUserByUsername")
@@ -173,6 +191,15 @@ public class UserController {
         userService.deleteUser(username);
     }
 
+    @PostMapping("/forgotPassword")
+    public ResponseEntity forgotPassword(@RequestParam String email){
+        try {
+            userService.forgotPassword(email);
+            return ResponseEntity.ok().build();
+        }catch (MessagingException e ){
+            return ResponseEntity.status(470).build();//Messaging error
+        }
+    }
 
 
 }

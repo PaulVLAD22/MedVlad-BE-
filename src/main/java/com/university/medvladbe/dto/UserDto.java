@@ -24,7 +24,6 @@ public class UserDto {
     private String profilePicture;
     private String licensePicture;
     private boolean active;
-    private long token;
     private int points;
     private Date dateOfRegistration;
 }

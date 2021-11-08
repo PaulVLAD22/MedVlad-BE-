@@ -40,8 +40,7 @@ public class User {
     private String profilePicture;
     private String licensePicture;
     private boolean active = false;
-    @ColumnDefault("0")
-    private long token;
+    private String token;
     @ColumnDefault("0")
     private int points=0;
     private Date dateOfRegistration;
@@ -75,7 +74,6 @@ public class User {
                 .profilePicture(this.getProfilePicture())
                 .licensePicture(this.getLicensePicture())
                 .role(this.getRole())
-                .token(this.getToken())
                 .username(this.getUsername())
                 .build();
     }

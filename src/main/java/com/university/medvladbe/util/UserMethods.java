@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class UserMethods {
@@ -33,5 +34,10 @@ public class UserMethods {
             username = principal.toString();
         }
         return username;
+    }
+    public static String generateToken() {
+        // verifica sa nu fie acelasi ca altul
+        String uuid = UUID.randomUUID().toString();
+        return uuid.replace("-","");
     }
 }
