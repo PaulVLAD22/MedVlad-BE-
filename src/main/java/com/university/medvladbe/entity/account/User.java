@@ -12,6 +12,7 @@ import org.hibernate.annotations.*;
 import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.Index;
 import javax.persistence.Table;
 import java.sql.Date;
 import java.util.*;
@@ -42,11 +43,11 @@ public class User {
     private boolean active = false;
     private String token;
     @ColumnDefault("0")
-    private int points=0;
+    private int points = 0;
     private Date dateOfRegistration;
 
     @ManyToMany(cascade = {CascadeType.ALL})
-    @Fetch(value= FetchMode.SELECT)
+    @Fetch(value = FetchMode.SELECT)
     List<QuestionAnswer> answers = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "sender")
@@ -61,7 +62,7 @@ public class User {
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "doctor")
     private List<QuestionAnswer> questionAnswers;
 
-    @OneToOne(cascade = CascadeType.ALL,mappedBy = "user", orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private RegistrationResult registrationResultUser;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "admin")

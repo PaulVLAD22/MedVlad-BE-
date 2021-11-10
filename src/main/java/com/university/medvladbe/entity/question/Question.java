@@ -28,7 +28,6 @@ public class Question {
     @Column(columnDefinition = "TEXT")
     private String content;
     private boolean checked;
-
     private boolean verdict=false;
     private String comment;
     @ManyToOne

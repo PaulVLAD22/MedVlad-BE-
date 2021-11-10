@@ -33,7 +33,7 @@ public class QuestionAnswer {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @ManyToMany(mappedBy = "answers")
+    @ManyToMany(mappedBy = "answers",cascade = CascadeType.ALL)
     private List<User> users = new ArrayList<>();
 
     public QuestionAnswerDto questionAnswerDtoFromQuestionAnswer() {
