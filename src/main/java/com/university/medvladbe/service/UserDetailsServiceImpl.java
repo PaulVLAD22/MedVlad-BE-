@@ -122,7 +122,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public void acceptUserRegistration(String adminUsername, String username,
                                        String comment, boolean verdict) {
-        // Asta dureaza mult rau
+        // Asta dureaza mult rau pt ca trimite email
         User admin = userRepository.findByUsername(adminUsername);
         User user = userRepository.findByUsername(username);
         if (verdict) {
@@ -140,7 +140,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             emailService.sendTextEmail(user.getEmail(),"Account Deletion","Your account has just been deleted by admin "+adminUsername);
         }
     }
-    public void acceptUserRegistration(String adminUsername,String username, String firstName,
+    public void acceptDoctorRegistration(String adminUsername,String username, String firstName,
                                        String lastName, String comment, boolean verdict){
         User admin = userRepository.findByUsername(adminUsername);
         User user = userRepository.findByUsername(username);

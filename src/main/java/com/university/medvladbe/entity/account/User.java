@@ -47,7 +47,7 @@ public class User {
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @Fetch(value= FetchMode.SELECT)
-    List<QuestionAnswer> likedAnswers = new ArrayList<>();
+    List<QuestionAnswer> answers = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "sender")
     private List<Message> messagesSent;
@@ -61,7 +61,11 @@ public class User {
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "doctor")
     private List<QuestionAnswer> questionAnswers;
 
+    @OneToOne(cascade = CascadeType.ALL,mappedBy = "user", orphanRemoval = true)
+    private RegistrationResult registrationResultUser;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "admin")
+    private List<RegistrationResult> registrationResultsAdmin;
 
     public UserDto userDtoFromUser() {
         return UserDto.builder()

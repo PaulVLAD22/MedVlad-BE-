@@ -30,10 +30,11 @@ public class QuestionAnswer {
     @ManyToOne
     private User doctor;
     private int numberOfLikes=0;
+    @Column(columnDefinition = "TEXT")
     private String content;
 
-    @ManyToMany(mappedBy = "likedAnswers")
-    private List<User> usersLikingAnswer = new ArrayList<>();
+    @ManyToMany(mappedBy = "answers")
+    private List<User> users = new ArrayList<>();
 
     public QuestionAnswerDto questionAnswerDtoFromQuestionAnswer() {
         return QuestionAnswerDto.builder()

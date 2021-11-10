@@ -122,8 +122,8 @@ public class QuestionService {
         QuestionAnswer questionAnswer = questionAnswerRepository.findById(questionAnswerId).get();
         User user = userRepository.findByUsername(username);
 
-        if (!user.getLikedAnswers().contains(questionAnswer)) {
-            user.getLikedAnswers().add(questionAnswer);
+        if (!user.getAnswers().contains(questionAnswer)) {
+            user.getAnswers().add(questionAnswer);
             questionAnswer.setNumberOfLikes(questionAnswer.getNumberOfLikes() + 1);
             userRepository.save(user);
         }

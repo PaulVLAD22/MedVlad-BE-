@@ -174,7 +174,7 @@ public class UserController {
                                          @RequestParam boolean verdict) {
         String adminUsername = getCurrentUsername();
         System.out.println(username + " " + comment + " " + verdict);
-        userService.acceptUserRegistration(adminUsername, username, firstName, lastName, comment, verdict);
+        userService.acceptDoctorRegistration(adminUsername, username, firstName, lastName, comment, verdict);
     }
 
     @PutMapping("/updateFirstName")

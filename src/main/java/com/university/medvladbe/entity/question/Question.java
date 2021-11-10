@@ -25,6 +25,7 @@ public class Question {
     private long id;
     @ManyToOne
     private User user;
+    @Column(columnDefinition = "TEXT")
     private String content;
     private boolean checked;
 
