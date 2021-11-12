@@ -10,6 +10,7 @@ import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -65,24 +66,22 @@ public class QuestionController {
 
     @GetMapping("getQuestions")
     public List<QuestionDto> getActiveQuestions() {
+        getCurrentUsername();
         return questionService.getQuestions();
     }
 
-    @GetMapping("getInactiveQuestions")
+    @GetMapping("/admin/getInactiveQuestions")
     public List<QuestionDto> getInactiveQuestions(){
         return questionService.getUncheckedQuestions();
     }
 
     private String getCurrentUsername(){
         String username;
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        log.info(String.valueOf(auth.getAuthorities()));
+        Object principal = auth.getPrincipal();
+        username = principal.toString();
 
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
-        log.info(username);
         return username;
     }
 

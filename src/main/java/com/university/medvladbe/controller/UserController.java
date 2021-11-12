@@ -177,12 +177,12 @@ public class UserController {
         userService.acceptDoctorRegistration(adminUsername, username, firstName, lastName, comment, verdict);
     }
 
-    @PutMapping("/updateFirstName")
+    @PutMapping("/user/updateFirstName")
     public void updateFirstName(@RequestParam String firstName) {
         userService.updateFirstName(getCurrentUsername(), firstName);
     }
 
-    @PutMapping("/updateLastName")
+    @PutMapping("/user/updateLastName")
     public void updateLastName(@RequestParam String lastName) {
         userService.updateLastName(getCurrentUsername(), lastName);
     }
@@ -193,8 +193,9 @@ public class UserController {
     }
 
     @DeleteMapping("/admin/deleteUser")
-    public void adminDeleteUser(@RequestParam String username) {
-        userService.deleteUser(username);
+    public void adminDeleteUser(@RequestParam String username,
+                                @RequestParam String comment) {
+        userService.deleteUser(getCurrentUsername(), username, comment);
     }
 
     @PostMapping("/forgotPassword")
@@ -206,6 +207,5 @@ public class UserController {
             return ResponseEntity.status(470).build();//Messaging error
         }
     }
-
 
 }

@@ -25,7 +25,7 @@ public class Question {
     private long id;
     @ManyToOne
     private User user;
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", unique = true)
     private String content;
     private boolean checked;
     private boolean verdict=false;
