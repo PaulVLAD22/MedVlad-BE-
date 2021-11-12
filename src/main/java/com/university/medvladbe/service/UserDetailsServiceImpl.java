@@ -80,6 +80,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                             .userDto(question.getUser().userDtoFromUser())
                             .content(question.getContent())
                             .questionAnswerList(questionRepository.findAnswersForQuestion(question).stream().map(QuestionAnswer::questionAnswerDtoFromQuestionAnswer).collect(Collectors.toList()))
+                            .comment(question.getComment())
+                            .verdict(question.isVerdict())
+                            .postingDate(question.getPostingDate())
                             .build());
         });
         return questionDtos;
@@ -174,7 +177,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .reason(comment)
                 .admin(admin)
                 .build();
+        banRecordRepository.save(banRecord);
         userRepository.delete(userRepository.findByUsername(username));
+        emailService.sendTextEmail(bannedUser.getEmail(),"Banned Account","Your account has just been banned by admin "+adminUsername+", reason: "+comment);
     }
 
     public void updateFirstName(String username, String firstName) {

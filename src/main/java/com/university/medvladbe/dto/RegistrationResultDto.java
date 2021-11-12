@@ -13,8 +13,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegistrationResultDto {
-    private UserDto admin;
-    private UserDto user;
+    private String admin;
+    private String user;
     private boolean verdict;
     private String comment;
 }

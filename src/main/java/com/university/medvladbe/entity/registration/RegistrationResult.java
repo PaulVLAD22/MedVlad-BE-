@@ -28,8 +28,8 @@ public class RegistrationResult {
 
     public RegistrationResultDto registrationResultToDto(){
         return RegistrationResultDto.builder()
-                .user(user.userDtoFromUser())
-                .admin(admin.userDtoFromUser())
+                .user(user.userDtoFromUser().getUsername())
+                .admin(admin.userDtoFromUser().getUsername())
                 .verdict(verdict)
                 .comment(comment)
                 .build();

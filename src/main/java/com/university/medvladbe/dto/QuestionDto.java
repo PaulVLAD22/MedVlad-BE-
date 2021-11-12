@@ -20,4 +20,6 @@ public class QuestionDto {
     private String content;
     private List<QuestionAnswerDto> questionAnswerList;
     private Date postingDate;
+    private boolean verdict;
+    private String comment;
 }
