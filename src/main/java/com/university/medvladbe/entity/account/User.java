@@ -70,6 +70,7 @@ public class User {
 
     public UserDto userDtoFromUser() {
         return UserDto.builder()
+                .id(this.getId())
                 .email(this.getEmail())
                 .firstName(this.getFirstName())
                 .lastName(this.getLastName())

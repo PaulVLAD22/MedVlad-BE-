@@ -77,6 +77,18 @@ public class QuestionService {
         return questionListToQuestionDtoList(questions);
     }
 
+    public List<QuestionDto> getQuestionsForDoctor(String username){
+        User doctor = userRepository.findByUsername(username);
+        List<Question> questions = questionRepository.findActiveQuestions()
+                .stream().filter(question -> {
+                    List<QuestionAnswer> questionAnswers = questionAnswerRepository.findByQuestion(question);
+                    List <QuestionAnswer> answeredByDoctor = questionAnswers.stream().filter(questionAnswer -> questionAnswer.getDoctor().equals(doctor)).collect(Collectors.toList());
+                    return answeredByDoctor.size() != 0;
+                }).collect(Collectors.toList());
+
+        return questionListToQuestionDtoList(questions);
+    }
+
     public List<QuestionDto> getQuestionsForUser(String username) {
         List<Question> questions = questionRepository.findActiveQuestions()
                 .stream().filter(question -> question.getUser().getUsername().equals(username))

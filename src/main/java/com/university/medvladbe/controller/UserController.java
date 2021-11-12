@@ -177,6 +177,8 @@ public class UserController {
         userService.acceptDoctorRegistration(adminUsername, username, firstName, lastName, comment, verdict);
     }
 
+
+
     @PutMapping("/user/updateFirstName")
     public void updateFirstName(@RequestParam String firstName) {
         userService.updateFirstName(getCurrentUsername(), firstName);

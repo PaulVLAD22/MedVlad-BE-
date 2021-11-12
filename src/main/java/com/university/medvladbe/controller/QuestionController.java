@@ -109,4 +109,10 @@ public class QuestionController {
     public void deleteQuestion(@RequestParam long questionId){
         questionService.deleteQuestion(questionId);
     }
+
+    @GetMapping("/getQuestionsForDoctor")
+    public List<QuestionDto> getQuestionsForDoctor(@RequestParam String doctorUsername){
+        return questionService.getQuestionsForDoctor(doctorUsername);
+    }
+
 }
