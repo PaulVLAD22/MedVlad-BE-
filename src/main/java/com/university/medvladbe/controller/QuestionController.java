@@ -2,6 +2,7 @@ package com.university.medvladbe.controller;
 
 import com.university.medvladbe.dto.QuestionDto;
 import com.university.medvladbe.entity.question.Question;
+import com.university.medvladbe.entity.question.QuestionCategory;
 import com.university.medvladbe.exception.AlreadyLikedComment;
 import com.university.medvladbe.service.QuestionService;
 import com.university.medvladbe.service.UserDetailsServiceImpl;
@@ -42,7 +43,7 @@ public class QuestionController {
         }
     }
 
-    @PostMapping("user/postQuestion")
+    @PostMapping("/user/postQuestion")
     public ResponseEntity<HttpStatus> postQuestion(@RequestParam String content, @RequestParam String category) {
         log.info("Post Question");
 
@@ -56,7 +57,7 @@ public class QuestionController {
         }
     }
 
-    @GetMapping("getQuestionsForUser")
+    @GetMapping("/getQuestionsForUser")
     public List<QuestionDto> getQuestionsForUser(String username){
         if (username == null){
             username = getCurrentUsername();
@@ -64,10 +65,13 @@ public class QuestionController {
         return questionService.getQuestionsForUser(username);
     }
 
-    @GetMapping("getQuestions")
+    @GetMapping("/getQuestions")
     public List<QuestionDto> getActiveQuestions() {
-        getCurrentUsername();
         return questionService.getQuestions();
+    }
+    @GetMapping("/getCategories")
+    public List<QuestionCategory> getQuestionCategory(){
+        return questionService.getQuestionsCategories();
     }
 
     @GetMapping("/admin/getInactiveQuestions")

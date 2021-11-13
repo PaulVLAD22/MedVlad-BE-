@@ -64,6 +64,10 @@ public class QuestionService {
 
     }
 
+    public List<QuestionCategory> getQuestionsCategories(){
+        return questionCategoryRepository.findAll();
+    }
+
     public void postQuestion(String username, String content, String category) {
         User user = userRepository.findByUsername(username);
         QuestionCategory questionCategory = questionCategoryRepository.findByName(category);
