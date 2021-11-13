@@ -1,4 +1,4 @@
-package com.university.medvladbe.repository;
+package com.university.medvladbe.repository.Questions;
 
 import com.university.medvladbe.entity.account.User;
 import com.university.medvladbe.entity.question.Question;

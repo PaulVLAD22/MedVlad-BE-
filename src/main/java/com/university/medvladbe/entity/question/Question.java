@@ -31,6 +31,8 @@ public class Question {
     private boolean verdict=false;
     private String comment;
     @ManyToOne
+    private QuestionCategory questionCategory;
+    @ManyToOne
     private User admin;
     private Date postingDate;
 

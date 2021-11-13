@@ -4,9 +4,11 @@ import com.university.medvladbe.dto.QuestionDto;
 import com.university.medvladbe.entity.account.User;
 import com.university.medvladbe.entity.question.Question;
 import com.university.medvladbe.entity.question.QuestionAnswer;
+import com.university.medvladbe.entity.question.QuestionCategory;
 import com.university.medvladbe.exception.AlreadyLikedComment;
-import com.university.medvladbe.repository.QuestionAnswerRepository;
-import com.university.medvladbe.repository.QuestionRepository;
+import com.university.medvladbe.repository.Questions.QuestionAnswerRepository;
+import com.university.medvladbe.repository.Questions.QuestionCategoryRepository;
+import com.university.medvladbe.repository.Questions.QuestionRepository;
 import com.university.medvladbe.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
@@ -14,11 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,14 +27,17 @@ public class QuestionService {
     private QuestionRepository questionRepository;
     private QuestionAnswerRepository questionAnswerRepository;
     private UserRepository userRepository;
+    private QuestionCategoryRepository questionCategoryRepository;
 
     @Autowired
     public QuestionService(QuestionRepository questionRepository,
                            UserRepository userRepository,
-                           QuestionAnswerRepository questionAnswerRepository) {
+                           QuestionAnswerRepository questionAnswerRepository,
+                           QuestionCategoryRepository questionCategoryRepository) {
         this.questionRepository = questionRepository;
         this.questionAnswerRepository = questionAnswerRepository;
         this.userRepository = userRepository;
+        this.questionCategoryRepository = questionCategoryRepository;
     }
 
     public void deleteQuestion(long questionId){
@@ -61,12 +64,14 @@ public class QuestionService {
 
     }
 
-    public void postQuestion(String username, String content) {
+    public void postQuestion(String username, String content, String category) {
         User user = userRepository.findByUsername(username);
+        QuestionCategory questionCategory = questionCategoryRepository.findByName(category);
         Question question = Question.builder()
                 .checked(false)
                 .user(user)
                 .content(content)
+                .questionCategory(questionCategory)
                 .postingDate(new Date(System.currentTimeMillis()))
                 .build();
         questionRepository.save(question);
@@ -122,6 +127,7 @@ public class QuestionService {
                     QuestionDto.builder()
                             .id(question.getId())
                             .userDto(question.getUser().userDtoFromUser())
+                            .questionCategory(question.getQuestionCategory())
                             .content(question.getContent())
                             .postingDate(question.getPostingDate())
                             .questionAnswerList(questionRepository.findAnswersForQuestion(question).stream().map(QuestionAnswer::questionAnswerDtoFromQuestionAnswer).collect(Collectors.toList()))

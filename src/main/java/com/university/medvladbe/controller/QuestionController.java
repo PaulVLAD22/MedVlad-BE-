@@ -43,13 +43,13 @@ public class QuestionController {
     }
 
     @PostMapping("user/postQuestion")
-    public ResponseEntity<HttpStatus> postQuestion(@RequestParam String content) {
+    public ResponseEntity<HttpStatus> postQuestion(@RequestParam String content, @RequestParam String category) {
         log.info("Post Question");
 
         String userName = getCurrentUsername();
 
         try {
-            questionService.postQuestion(userName, content);
+            questionService.postQuestion(userName, content, category);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);

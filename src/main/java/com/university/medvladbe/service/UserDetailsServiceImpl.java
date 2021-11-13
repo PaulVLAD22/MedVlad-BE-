@@ -14,6 +14,7 @@ import com.university.medvladbe.entity.registration.RegistrationResult;
 import com.university.medvladbe.exception.EmailOrUsernameAlreadyTaken;
 import com.university.medvladbe.exception.UserNotActive;
 import com.university.medvladbe.repository.*;
+import com.university.medvladbe.repository.Questions.QuestionRepository;
 import com.university.medvladbe.util.UserMethods;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
