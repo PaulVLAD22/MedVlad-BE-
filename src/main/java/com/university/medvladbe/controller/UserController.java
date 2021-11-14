@@ -15,6 +15,7 @@ import com.university.medvladbe.entity.question.Question;
 import com.university.medvladbe.entity.registration.RegistrationResult;
 import com.university.medvladbe.exception.EmailOrUsernameAlreadyTaken;
 import com.university.medvladbe.service.EmailService;
+import com.university.medvladbe.service.OtcService;
 import com.university.medvladbe.service.QuestionService;
 import com.university.medvladbe.service.UserDetailsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -46,12 +48,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class UserController {
 
     private UserDetailsServiceImpl userService;
-    private EmailService emailService;
+    private OtcService otcService;
 
     @Autowired
-    public UserController(UserDetailsServiceImpl userService, EmailService emailService) {
+    public UserController(UserDetailsServiceImpl userService,
+                          OtcService otcService) {
         this.userService = userService;
-        this.emailService = emailService;
+        this.otcService = otcService;
     }
 
     @GetMapping("token/refresh")
@@ -99,19 +102,19 @@ public class UserController {
     }
 
     @GetMapping("/verifyToken")
-    public ResponseEntity<String> verifyToken(@RequestParam String token) {
-        try {
-            return ResponseEntity.ok(userService.getEmailForToken(token));
-        } catch (Exception e) {
-            return ResponseEntity.status(470).build();//no such user
+    public ResponseEntity verifyToken(@RequestParam int token, @RequestParam String email) {
+        if (otcService.getOtp(email)==token)
+            return ResponseEntity.ok().build();
+        else{
+            return ResponseEntity.status(475).build();//wrong token
         }
     }
 
     @PutMapping("/resetPassword")
     public void resetPassword(@RequestParam String email,
-                              @RequestParam String password,
-                              @RequestParam String token) {
-        userService.resetPassword(email, password, token);
+                              @RequestParam String password) {
+        // poti sa faci sa iei si token-ul si sa verifici iar daca nu a expirat (5 minute timp)
+        userService.resetPassword(email, password);
     }
 
     @PostMapping("/register")
@@ -178,7 +181,6 @@ public class UserController {
     }
 
 
-
     @PutMapping("/user/updateFirstName")
     public void updateFirstName(@RequestParam String firstName) {
         userService.updateFirstName(getCurrentUsername(), firstName);
@@ -203,10 +205,13 @@ public class UserController {
     @PostMapping("/forgotPassword")
     public ResponseEntity forgotPassword(@RequestParam String email) {
         try {
-            userService.forgotPassword(email);
+            otcService.forgotPassword(email);
             return ResponseEntity.ok().build();
-        } catch (MessagingException e) {
-            return ResponseEntity.status(470).build();//Messaging error
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(471).build();//Wrong email
+        }
+        catch(MessagingException e ){
+            return ResponseEntity.status(470).build();// messaging error
         }
     }
 

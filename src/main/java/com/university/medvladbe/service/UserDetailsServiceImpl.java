@@ -43,32 +43,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final QuestionRepository questionRepository;
     private final RegistrationResultRepository registrationResultRepository;
     private final BanRecordRepository banRecordRepository;
+    private final OtcService otcService;
 
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
 
-    public String getEmailForToken(String token) {
-        User user = userRepository.findByToken(token);
-        return user.getEmail();
-    }
 
-    public void resetPassword(String email, String password, String token) {
-        log.info(email);
-        System.out.println("COX");
-        User user = userRepository.findByEmail(email);
-        if (user.getToken().equals(token)) {
-            user.setPassword(passwordEncoder.encode(password));
-            user.setToken(UserMethods.generateToken());
-            userRepository.save(user);
-        }
-    }
 
-    public void forgotPassword(String email) throws MessagingException {
+
+    public void resetPassword(String email, String password) {
         User user = userRepository.findByEmail(email);
-        String token = user.getToken();
-        String link = "http://localhost:3000/resetPassword/" + token;
-        String emailText = "Access <a href=\"" + link + "\"" + ">" + link + "</a> to reset you password";
-        emailService.sendHtmlEmail(email, "Password Reset", emailText);
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
     }
 
     public List<QuestionDto> questionListToQuestionDtoList(List<Question> questions) {
