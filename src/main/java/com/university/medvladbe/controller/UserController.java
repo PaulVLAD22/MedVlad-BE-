@@ -5,26 +5,17 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.university.medvladbe.dto.AdminHistoryDto;
-import com.university.medvladbe.dto.QuestionDto;
 import com.university.medvladbe.dto.UserDto;
-import com.university.medvladbe.entity.account.Role;
 import com.university.medvladbe.entity.account.User;
-import com.university.medvladbe.entity.question.Question;
-import com.university.medvladbe.entity.registration.RegistrationResult;
 import com.university.medvladbe.exception.EmailOrUsernameAlreadyTaken;
-import com.university.medvladbe.service.EmailService;
+import com.university.medvladbe.dto.request.RegisterUserRequest;
 import com.university.medvladbe.service.OtcService;
-import com.university.medvladbe.service.QuestionService;
 import com.university.medvladbe.service.UserDetailsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -32,10 +23,8 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.ws.Response;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.university.medvladbe.util.UserMethods.getCurrentUsername;
 import static java.util.Arrays.stream;
@@ -118,14 +107,15 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity registerUser(@RequestParam String email,
-                                       @RequestParam String username,
-                                       @RequestParam String password,
-                                       @RequestParam String licensePicture,
-                                       @RequestParam String role) {
-        log.info(email + username + password + licensePicture + role);
+    public ResponseEntity registerUser(RegisterUserRequest registerUserRequest) {
+
+        log.info(String.valueOf(registerUserRequest));
         try {
-            userService.registerUser(email, username, password, role, licensePicture);
+            userService.registerUser(registerUserRequest.getEmail(),
+                    registerUserRequest.getUsername(),
+                    registerUserRequest.getPassword(),
+                    registerUserRequest.getRole(),
+                    registerUserRequest.getLicensePicture());
         } catch (EmailOrUsernameAlreadyTaken e) {
             return ResponseEntity.status(409).build();//Conflict
         }

@@ -41,7 +41,6 @@ public class User {
     private String profilePicture;
     private String licensePicture;
     private boolean active = false;
-    private String token;
     @ColumnDefault("0")
     private int points = 0;
     private Date dateOfRegistration;

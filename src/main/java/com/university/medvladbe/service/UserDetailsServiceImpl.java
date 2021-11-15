@@ -104,7 +104,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .role(userRole)
                 .licensePicture(licensePicture)
                 .dateOfRegistration(new Date(System.currentTimeMillis()))
-                .token(UserMethods.generateToken())
                 .build();
 
         userRepository.save(user);
