@@ -1,4 +1,4 @@
-package com.university.medvladbe.entity.account;
+package com.university.medvladbe.model.entity.account;
 
 public enum DefinedRole {
     USER,

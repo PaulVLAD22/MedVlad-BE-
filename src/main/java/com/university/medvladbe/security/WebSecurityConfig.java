@@ -48,7 +48,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/register").permitAll()
                 .antMatchers("/forgotPassword").permitAll()
                 .antMatchers("/verifyToken").permitAll()
-                .antMatchers("/resetPassword").permitAll();
+                .antMatchers("/resetPassword").permitAll()
+                        .antMatchers("/chat/**").permitAll();
 //asta merge        http.authorizeRequests().antMatchers("/user/postQuestion?content=par").hasAuthority("USER");
         //http.authorizeRequests().antMatchers("/user/**").hasAnyAuthority("");
 //                .antMatchers("/doctor/**").hasRole("DOCTOR")

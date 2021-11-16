@@ -1,4 +1,4 @@
-package com.university.medvladbe.entity.question;
+package com.university.medvladbe.model.entity.question;
 
 import lombok.Data;
 

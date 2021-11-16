@@ -1,7 +1,7 @@
 package com.university.medvladbe.repository.Questions;
 
-import com.university.medvladbe.entity.question.Question;
-import com.university.medvladbe.entity.question.QuestionAnswer;
+import com.university.medvladbe.model.entity.question.Question;
+import com.university.medvladbe.model.entity.question.QuestionAnswer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

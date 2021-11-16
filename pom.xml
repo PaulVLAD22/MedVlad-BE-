@@ -106,6 +106,12 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <exclusions>
+        <exclusion>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+        </exclusion>
+    </exclusions>
 
     <build>
         <plugins>

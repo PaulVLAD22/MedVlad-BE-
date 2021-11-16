@@ -7,7 +7,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.university.medvladbe.dto.AdminHistoryDto;
 import com.university.medvladbe.dto.UserDto;
-import com.university.medvladbe.entity.account.User;
+import com.university.medvladbe.model.entity.account.User;
 import com.university.medvladbe.exception.EmailOrUsernameAlreadyTaken;
 import com.university.medvladbe.dto.request.RegisterUserRequest;
 import com.university.medvladbe.service.OtcService;

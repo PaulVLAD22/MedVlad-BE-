@@ -1,8 +1,6 @@
 package com.university.medvladbe.dto;
 
-import com.university.medvladbe.entity.account.User;
-import com.university.medvladbe.entity.question.QuestionAnswer;
-import com.university.medvladbe.entity.question.QuestionCategory;
+import com.university.medvladbe.model.entity.question.QuestionCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

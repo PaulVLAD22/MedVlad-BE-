@@ -1,7 +1,7 @@
-package com.university.medvladbe.entity.registration;
+package com.university.medvladbe.model.entity.registration;
 
 import com.university.medvladbe.dto.RegistrationResultDto;
-import com.university.medvladbe.entity.account.User;
+import com.university.medvladbe.model.entity.account.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

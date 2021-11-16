@@ -1,6 +1,6 @@
-package com.university.medvladbe.entity.ban;
+package com.university.medvladbe.model.entity.ban;
 
-import com.university.medvladbe.entity.account.User;
+import com.university.medvladbe.model.entity.account.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,8 +1,8 @@
 package com.university.medvladbe.service;
 
 import com.university.medvladbe.dto.MessageDto;
-import com.university.medvladbe.entity.account.User;
-import com.university.medvladbe.entity.message.Message;
+import com.university.medvladbe.model.entity.account.User;
+import com.university.medvladbe.model.entity.message.Message;
 import com.university.medvladbe.repository.MessageRepository;
 import com.university.medvladbe.repository.UserRepository;
 import com.university.medvladbe.util.UserMethods;
@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 

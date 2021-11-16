@@ -1,10 +1,10 @@
 package com.university.medvladbe.service;
 
 import com.university.medvladbe.dto.QuestionDto;
-import com.university.medvladbe.entity.account.User;
-import com.university.medvladbe.entity.question.Question;
-import com.university.medvladbe.entity.question.QuestionAnswer;
-import com.university.medvladbe.entity.question.QuestionCategory;
+import com.university.medvladbe.model.entity.account.User;
+import com.university.medvladbe.model.entity.question.Question;
+import com.university.medvladbe.model.entity.question.QuestionAnswer;
+import com.university.medvladbe.model.entity.question.QuestionCategory;
 import com.university.medvladbe.exception.AlreadyLikedComment;
 import com.university.medvladbe.repository.Questions.QuestionAnswerRepository;
 import com.university.medvladbe.repository.Questions.QuestionCategoryRepository;

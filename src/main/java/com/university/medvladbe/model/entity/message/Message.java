@@ -1,6 +1,6 @@
-package com.university.medvladbe.entity.message;
+package com.university.medvladbe.model.entity.message;
 
-import com.university.medvladbe.entity.account.User;
+import com.university.medvladbe.model.entity.account.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

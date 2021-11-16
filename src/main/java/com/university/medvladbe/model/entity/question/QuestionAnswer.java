@@ -1,7 +1,7 @@
-package com.university.medvladbe.entity.question;
+package com.university.medvladbe.model.entity.question;
 
 import com.university.medvladbe.dto.QuestionAnswerDto;
-import com.university.medvladbe.entity.account.User;
+import com.university.medvladbe.model.entity.account.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,9 +10,7 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor

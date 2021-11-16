@@ -5,13 +5,11 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.university.medvladbe.dto.UserDto;
 import com.university.medvladbe.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -23,7 +21,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -73,7 +70,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
 //        response.setHeader("access_token",accessToken);
 //        response.setHeader("refresh_token",refreshToken);
-        com.university.medvladbe.entity.account.User userEntity = userRepository.findByUsername(user.getUsername());
+        com.university.medvladbe.model.entity.account.User userEntity = userRepository.findByUsername(user.getUsername());
         UserDto userDto =  userEntity.userDtoFromUser();
 
         Map<String, Object> tokens = new HashMap<>();

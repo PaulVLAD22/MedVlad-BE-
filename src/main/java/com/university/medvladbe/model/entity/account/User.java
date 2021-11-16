@@ -1,23 +1,19 @@
-package com.university.medvladbe.entity.account;
+package com.university.medvladbe.model.entity.account;
 
 import com.university.medvladbe.dto.UserDto;
-import com.university.medvladbe.entity.message.Message;
-import com.university.medvladbe.entity.question.Question;
-import com.university.medvladbe.entity.question.QuestionAnswer;
-import com.university.medvladbe.entity.registration.RegistrationResult;
+import com.university.medvladbe.model.entity.message.Message;
+import com.university.medvladbe.model.entity.question.Question;
+import com.university.medvladbe.model.entity.question.QuestionAnswer;
+import com.university.medvladbe.model.entity.registration.RegistrationResult;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.*;
 
 import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.Index;
 import javax.persistence.Table;
 import java.sql.Date;
 import java.util.*;
-
-import static javax.persistence.FetchType.EAGER;
 
 @Data
 @Builder

@@ -1,11 +1,7 @@
 package com.university.medvladbe.dto;
 
-import com.university.medvladbe.entity.account.User;
-import com.university.medvladbe.entity.question.Question;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import javax.persistence.*;
 
 @AllArgsConstructor
 @NoArgsConstructor

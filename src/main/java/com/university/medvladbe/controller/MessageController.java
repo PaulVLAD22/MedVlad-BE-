@@ -1,12 +1,10 @@
 package com.university.medvladbe.controller;
 
 import com.university.medvladbe.dto.MessageDto;
-import com.university.medvladbe.entity.message.Message;
 import com.university.medvladbe.service.MessageService;
 import com.university.medvladbe.service.UserDetailsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;

@@ -1,7 +1,5 @@
 package com.university.medvladbe.dto;
 
-import com.university.medvladbe.entity.question.Question;
-import com.university.medvladbe.entity.registration.RegistrationResult;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

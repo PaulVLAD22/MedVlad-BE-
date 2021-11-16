@@ -1,6 +1,5 @@
 package com.university.medvladbe.dto;
 
-import com.university.medvladbe.entity.account.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

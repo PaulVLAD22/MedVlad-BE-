@@ -1,7 +1,7 @@
-package com.university.medvladbe.entity.question;
+package com.university.medvladbe.model.entity.question;
 
 import com.university.medvladbe.dto.QuestionDto;
-import com.university.medvladbe.entity.account.User;
+import com.university.medvladbe.model.entity.account.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +10,6 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
