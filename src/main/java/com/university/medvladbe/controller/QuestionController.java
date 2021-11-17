@@ -5,14 +5,16 @@ import com.university.medvladbe.model.entity.question.QuestionCategory;
 import com.university.medvladbe.exception.AlreadyLikedComment;
 import com.university.medvladbe.service.QuestionService;
 import com.university.medvladbe.service.UserDetailsServiceImpl;
+import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 
@@ -36,7 +38,7 @@ public class QuestionController {
         try {
             questionService.acceptQuestion(id, adminUsername, comment, verdict);
             return new ResponseEntity(HttpStatus.OK);
-        }catch (NotFound e) {
+        }catch (NotFoundException e) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }

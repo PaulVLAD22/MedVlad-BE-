@@ -10,10 +10,12 @@ import com.university.medvladbe.repository.Questions.QuestionAnswerRepository;
 import com.university.medvladbe.repository.Questions.QuestionCategoryRepository;
 import com.university.medvladbe.repository.Questions.QuestionRepository;
 import com.university.medvladbe.repository.UserRepository;
+import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -47,11 +49,11 @@ public class QuestionService {
         questionAnswerRepository.deleteById(questionAnswerId);
     }
 
-    public void acceptQuestion(long id, String adminUsername, String comment, boolean verdict) throws NotFound {
+    public void acceptQuestion(long id, String adminUsername, String comment, boolean verdict) throws NotFoundException {
         User admin = userRepository.findByUsername(adminUsername);
         Optional<Question> questionToAccept = questionRepository.findById(id);
         if (!questionToAccept.isPresent()) {
-            throw new NotFound();
+            throw new NotFoundException("");
         }
 
         Question question = questionToAccept.get();
