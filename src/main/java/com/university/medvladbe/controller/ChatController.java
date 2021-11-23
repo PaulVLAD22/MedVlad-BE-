@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 public class ChatController {
     @Autowired
     private ChatMatchingService chatMatchingService;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/chat.send")
     @SendTo("/topic/public")
@@ -25,11 +27,14 @@ public class ChatController {
         return chatMessage;
     }
     @MessageMapping("/chat.newUser")
-    @SendTo("/topic/public")
     public ChatMessage newUser(@Payload final ChatMessage chatMessage,
                                SimpMessageHeaderAccessor headerAccessor){
         log.info("NEW USER");
+        log.info(chatMessage.getTo());
+        log.info(chatMessage.getSender());
         headerAccessor.getSessionAttributes().put("username",chatMessage.getSender());
+        // cauta cum se decide catre cine se trimite
+        messagingTemplate.convertAndSendToUser(chatMessage.getTo(), "/topic/public", chatMessage);
         return chatMessage;
     }
     @GetMapping("/doctor/joinQueue")
@@ -44,6 +49,6 @@ public class ChatController {
     @ResponseBody
     public int getUserTopic() throws InterruptedException {
         String username = UserMethods.getCurrentUsername();
-        return chatMatchingService.userJoinsQueue();
+        return chatMatchingService.userJoinsQueue(username);
     }
 }

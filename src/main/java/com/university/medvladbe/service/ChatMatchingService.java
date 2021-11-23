@@ -15,8 +15,8 @@ public class ChatMatchingService {
     @Autowired
     private UserRepository userRepository;
 
-    private final List<User> doctors;
-    private final List<User> users;
+    private final List<String> doctors;
+    private final List<String> users;
 
     private int topicNumber;
 
@@ -30,23 +30,26 @@ public class ChatMatchingService {
         User doctor = userRepository.findByUsername(username);
         System.out.println("NOPE");
         // stack overflow
-        doctors.add(doctor);
+        doctors.add(doctor.getUsername());
         System.out.println(doctors);
         System.out.println("DA");
-        while (users.size() == 0)
-            Thread.sleep(5000);
-
+        while (users.size() == 0){
+            Thread.sleep(1);
+            System.out.println("User size 0");
+        }
+        topicNumber = 192002002;
+        System.out.println("OUT");
+        doctors.remove(username);
         return topicNumber;
 
     }
 
 
-    public int userJoinsQueue() throws InterruptedException {
+    public int userJoinsQueue(String username) throws InterruptedException {
         System.out.println(doctors);
-        while (doctors.size() == 0) {
-            Thread.sleep(5000);
-        }
-        topicNumber = 1920002;
+        users.add(username);
+        Thread.sleep(1000);
+        users.remove(username);
         return topicNumber;
 
 
