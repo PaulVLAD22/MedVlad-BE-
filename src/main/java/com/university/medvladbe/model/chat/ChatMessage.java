@@ -12,5 +12,7 @@ public class ChatMessage {
     @Getter
     private String sender;
     @Getter
+    private String to;
+    @Getter
     private String time;
 }
