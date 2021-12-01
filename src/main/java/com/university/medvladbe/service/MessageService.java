@@ -22,6 +22,8 @@ public class MessageService {
     private final UserRepository userRepository;
 
     public List<MessageDto> getMessagesWithUser(String loggedUsername, String username2) {
+        // ~20 miliseconds, nu dureaza mult, problema e in front end
+        long startTime = System.currentTimeMillis();
         User loggedUser = userRepository.findByUsername(loggedUsername);
         User otherUser = userRepository.findByUsername(username2);
         List<Message> receivedMessages = messageRepository.findAllBySenderAndReceiver(otherUser, loggedUser);
@@ -39,7 +41,9 @@ public class MessageService {
                     .timeOfSending(message.getTimeOfSending())
                     .build());
         });
+        long endTime = System.currentTimeMillis();
 
+        System.out.println("That took " + (endTime - startTime) + " milliseconds");
         return messageDtos;
 
 

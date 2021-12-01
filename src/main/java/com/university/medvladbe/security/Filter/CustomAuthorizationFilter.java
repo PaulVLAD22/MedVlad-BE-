@@ -47,8 +47,18 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                             new UsernamePasswordAuthenticationToken(username, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     filterChain.doFilter(request, response);
-                } catch (Exception exception) {
+                }
+                catch (com.auth0.jwt.exceptions.TokenExpiredException expiredException){
+                    response.setHeader("error",expiredException.getMessage());
+                    response.setStatus(401);// unathorized
+                    Map<String, String> error = new HashMap<>();
+                    error.put("error_message",expiredException.getMessage());
+                    response.setContentType(APPLICATION_JSON_VALUE);
+                    new ObjectMapper().writeValue(response.getOutputStream(),error);
+                }
+                catch (Exception exception) {
                     //TODO:: fa pt diferite cazuri
+                    log.error(exception.getClass().getName());
                     log.error("Error logging in: {}",exception.getMessage());
                     response.setHeader("error",exception.getMessage());
                     //response.sendError(403);//forbidden
