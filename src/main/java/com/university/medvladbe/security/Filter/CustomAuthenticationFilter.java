@@ -47,6 +47,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
+        log.info("Succ Auth");
         User user = (User)authentication.getPrincipal();
         Algorithm algorithm =
                 Algorithm.HMAC256("secret".getBytes());
@@ -65,11 +66,11 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 //aici punem informatiile token-ului
                 .withSubject(user.getUsername())
                 .withIssuer(request.getRequestURL().toString())
+                .withExpiresAt(new Date(System.currentTimeMillis()+ 30L *24*60*60*1000))// 30 zile
                 .sign(algorithm);
         /// nu expira
 
-//        response.setHeader("access_token",accessToken);
-//        response.setHeader("refresh_token",refreshToken);
+
         com.university.medvladbe.model.entity.account.User userEntity = userRepository.findByUsername(user.getUsername());
         UserDto userDto =  userEntity.userDtoFromUser();
 
@@ -81,7 +82,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         new ObjectMapper().writeValue(response.getOutputStream(),tokens);
     }
 
-    //block spam login - security course amigoscode
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         super.unsuccessfulAuthentication(request, response, failed);
