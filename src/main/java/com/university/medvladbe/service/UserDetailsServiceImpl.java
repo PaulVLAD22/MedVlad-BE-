@@ -8,8 +8,7 @@ import com.university.medvladbe.model.entity.account.DefinedRole;
 import com.university.medvladbe.model.entity.account.Role;
 import com.university.medvladbe.model.entity.account.User;
 import com.university.medvladbe.model.entity.ban.BanRecord;
-import com.university.medvladbe.model.entity.question.Question;
-import com.university.medvladbe.model.entity.question.QuestionAnswer;
+import com.university.medvladbe.model.entity.question.*;
 import com.university.medvladbe.model.entity.registration.RegistrationResult;
 import com.university.medvladbe.exception.EmailOrUsernameAlreadyTaken;
 import com.university.medvladbe.exception.UserNotActive;
@@ -69,6 +68,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                             .comment(question.getComment())
                             .verdict(question.isVerdict())
                             .postingDate(question.getPostingDate())
+                            .symptoms(question.getSymptoms().stream().map(Symptom::symptomDtoFromSymptom).collect(Collectors.toList()))
                             .build());
         });
         return questionDtos;

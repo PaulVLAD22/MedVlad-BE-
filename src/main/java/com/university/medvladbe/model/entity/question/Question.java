@@ -7,9 +7,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.sql.Date;
+import java.util.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,6 +34,10 @@ public class Question {
     private boolean checked;
     private boolean verdict=false;
     private String comment;
+
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @Fetch(value = FetchMode.SELECT)
+    private List<Symptom> symptoms;
     @ManyToOne
     private QuestionCategory questionCategory;
     @ManyToOne

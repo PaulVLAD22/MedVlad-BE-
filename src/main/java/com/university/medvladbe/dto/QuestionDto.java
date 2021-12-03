@@ -1,6 +1,6 @@
 package com.university.medvladbe.dto;
 
-import com.university.medvladbe.model.entity.question.QuestionCategory;
+import com.university.medvladbe.model.entity.question.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,6 +17,7 @@ public class QuestionDto {
     private long id;
     private UserDto userDto;
     private String content;
+    private List<SymptomDto> symptoms;
     private List<QuestionAnswerDto> questionAnswerList;
     private QuestionCategory questionCategory;
     private Date postingDate;

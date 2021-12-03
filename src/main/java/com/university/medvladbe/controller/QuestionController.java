@@ -1,7 +1,8 @@
 package com.university.medvladbe.controller;
 
-import com.university.medvladbe.dto.QuestionDto;
-import com.university.medvladbe.model.entity.question.QuestionCategory;
+import com.university.medvladbe.dto.*;
+import com.university.medvladbe.dto.request.*;
+import com.university.medvladbe.model.entity.question.*;
 import com.university.medvladbe.exception.AlreadyLikedComment;
 import com.university.medvladbe.service.QuestionService;
 import com.university.medvladbe.service.UserDetailsServiceImpl;
@@ -14,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 
@@ -44,13 +44,12 @@ public class QuestionController {
     }
 
     @PostMapping("/user/postQuestion")
-    public ResponseEntity<HttpStatus> postQuestion(@RequestParam String content, @RequestParam String category) {
-        log.info("Post Question");
+    public ResponseEntity<HttpStatus> postQuestion(@RequestBody PostQuestionBody postQuestionBody) {
 
         String userName = getCurrentUsername();
 
         try {
-            questionService.postQuestion(userName, content, category);
+            questionService.postQuestion(userName, postQuestionBody.getContent(), "Coronavirus",postQuestionBody.getSelectedSymptoms() );
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -72,6 +71,10 @@ public class QuestionController {
     @GetMapping("/getCategories")
     public List<QuestionCategory> getQuestionCategory(){
         return questionService.getQuestionsCategories();
+    }
+    @GetMapping("/getSymptoms")
+    public List<SymptomDto> getSymptoms(){
+        return questionService.getSymptoms();
     }
 
     @GetMapping("/admin/getInactiveQuestions")
