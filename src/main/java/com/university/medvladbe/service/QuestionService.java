@@ -1,22 +1,19 @@
 package com.university.medvladbe.service;
 
 import com.university.medvladbe.dto.*;
-import com.university.medvladbe.model.entity.account.User;
+import com.university.medvladbe.exception.*;
+import com.university.medvladbe.model.entity.account.*;
 import com.university.medvladbe.model.entity.question.*;
-import com.university.medvladbe.exception.AlreadyLikedComment;
 import com.university.medvladbe.repository.Questions.*;
-import com.university.medvladbe.repository.UserRepository;
-import javassist.NotFoundException;
-import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.university.medvladbe.repository.*;
+import javassist.*;
+import lombok.extern.slf4j.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.stream.*;
 
 @Service
 @Slf4j
@@ -25,22 +22,20 @@ public class QuestionService {
     private QuestionRepository questionRepository;
     private QuestionAnswerRepository questionAnswerRepository;
     private UserRepository userRepository;
-    private QuestionCategoryRepository questionCategoryRepository;
+
 
     @Autowired
     public QuestionService(QuestionRepository questionRepository,
                            UserRepository userRepository,
                            QuestionAnswerRepository questionAnswerRepository,
-                           QuestionCategoryRepository questionCategoryRepository,
                            SymptomRepository symptomRepository) {
         this.questionRepository = questionRepository;
         this.questionAnswerRepository = questionAnswerRepository;
         this.userRepository = userRepository;
-        this.questionCategoryRepository = questionCategoryRepository;
         this.symptomRepository = symptomRepository;
     }
 
-    public List<SymptomDto> getSymptoms(){
+    public List<SymptomDto> getSymptoms() {
         return symptomRepository.findAll().stream().map(Symptom::symptomDtoFromSymptom).collect(Collectors.toList());
     }
 
@@ -54,10 +49,12 @@ public class QuestionService {
 
     public void acceptQuestion(long id, String adminUsername, String comment, boolean verdict) throws NotFoundException {
         User admin = userRepository.findByUsername(adminUsername);
+        log.info("AICI");
         Optional<Question> questionToAccept = questionRepository.findById(id);
         if (!questionToAccept.isPresent()) {
             throw new NotFoundException("");
         }
+        log.info("AICI");
 
         Question question = questionToAccept.get();
         question.setChecked(true);
@@ -69,23 +66,18 @@ public class QuestionService {
 
     }
 
-    public List<QuestionCategory> getQuestionsCategories() {
-        return questionCategoryRepository.findAll();
-    }
-
     public void postQuestion(String username, String content, String category, List<Integer> selectedSymptoms) {
         List<Symptom> symptomList = symptomRepository.findAll();
         List<Symptom> questionSymptoms = symptomList.stream()
                 .filter(symptom -> selectedSymptoms.get(symptomList.indexOf(symptom)) == 1)
                 .collect(Collectors.toList());
         User user = userRepository.findByUsername(username);
-        QuestionCategory questionCategory = questionCategoryRepository.findByName(category);
+
         Question question = Question.builder()
                 .checked(false)
                 .user(user)
                 .content(content)
                 .symptoms(questionSymptoms)
-                .questionCategory(questionCategory)
                 .postingDate(new Date(System.currentTimeMillis()))
                 .build();
         questionRepository.save(question);
@@ -122,32 +114,40 @@ public class QuestionService {
     }
 
 
-    public void postQuestionAnswer(long questionId, String doctorUsername, String content) {
+    public void postQuestionAnswer(long questionId, String doctorUsername, String content, String condition) {
         Question question = questionRepository.findById(questionId).get();// poate nu e ok
 
         QuestionAnswer questionAnswer = QuestionAnswer.builder()
                 .question(question)
                 .doctor(userRepository.findByUsername(doctorUsername))
-                .content(content).build();
-        questionAnswerRepository.save(questionAnswer);
+                .content(content)
+                .pacientCondition(condition)
+                .build();
+        question.setAnswer(questionAnswer);
+        questionRepository.save(question);
     }
 
     public List<QuestionDto> questionListToQuestionDtoList(List<Question> questions) {
         List<QuestionDto> questionDtos = new ArrayList<>();
 
         questions.forEach(question -> {
+            QuestionAnswerDto questionAnswerDto = null;
+            if (question.getAnswer() != null) {
+                questionAnswerDto = question.getAnswer().questionAnswerDtoFromQuestionAnswer();
+            }
             questionDtos.add(
                     QuestionDto.builder()
                             .id(question.getId())
                             .userDto(question.getUser().userDtoFromUser())
                             .content(question.getContent())
-                            .questionAnswerList(questionRepository.findAnswersForQuestion(question).stream().map(QuestionAnswer::questionAnswerDtoFromQuestionAnswer).collect(Collectors.toList()))
+                            .answer(questionAnswerDto)
                             .comment(question.getComment())
                             .verdict(question.isVerdict())
                             .postingDate(question.getPostingDate())
                             .symptoms(question.getSymptoms().stream().map(Symptom::symptomDtoFromSymptom).collect(Collectors.toList()))
                             .build());
         });
+        log.info("DA@2");
         return questionDtos;
     }
 

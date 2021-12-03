@@ -23,12 +23,16 @@ public class QuestionAnswer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @ManyToOne
+    private String pacientCondition;
+    private int numberOfLikes=0;
+
+    @OneToOne
     private Question question;
+
     @ManyToOne
     private User doctor;
-    private int numberOfLikes=0;
-    @Column(columnDefinition = "TEXT")
+
+    @Column(columnDefinition = "TEXT", length = 255)
     private String content;
 
     @ManyToMany(mappedBy = "answers",cascade = CascadeType.ALL)
@@ -40,6 +44,7 @@ public class QuestionAnswer {
                 .numberOfLikes(this.getNumberOfLikes())
                 .doctor(this.doctor.userDtoFromUser())
                 .content(this.getContent())
+                .condition(this.getPacientCondition())
                 .build();
     }
 

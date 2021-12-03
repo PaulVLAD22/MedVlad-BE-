@@ -13,5 +13,6 @@ public class QuestionAnswerDto {
     private UserDto doctor;
     private int numberOfLikes;
     private String content;
+    private String condition;
 
 }

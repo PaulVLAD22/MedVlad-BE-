@@ -1,6 +1,6 @@
 package com.university.medvladbe.model.entity.question;
 
-import com.university.medvladbe.dto.QuestionDto;
+import com.university.medvladbe.dto.*;
 import com.university.medvladbe.model.entity.account.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,21 +35,16 @@ public class Question {
     private boolean verdict=false;
     private String comment;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private QuestionAnswer answer;
+
     @ManyToMany(cascade = {CascadeType.ALL})
     @Fetch(value = FetchMode.SELECT)
     private List<Symptom> symptoms;
-    @ManyToOne
-    private QuestionCategory questionCategory;
+
     @ManyToOne
     private User admin;
     private Date postingDate;
 
-    public QuestionDto questionDtoFromQuestion() {
-        return
-                QuestionDto.builder()
-                        .userDto(this.getUser().userDtoFromUser())
-                        .content(this.getContent())
-                        .build();
-    }
 
 }

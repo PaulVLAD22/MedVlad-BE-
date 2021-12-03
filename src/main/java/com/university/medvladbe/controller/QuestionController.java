@@ -2,21 +2,17 @@ package com.university.medvladbe.controller;
 
 import com.university.medvladbe.dto.*;
 import com.university.medvladbe.dto.request.*;
-import com.university.medvladbe.model.entity.question.*;
-import com.university.medvladbe.exception.AlreadyLikedComment;
-import com.university.medvladbe.service.QuestionService;
-import com.university.medvladbe.service.UserDetailsServiceImpl;
-import javassist.NotFoundException;
-import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import com.university.medvladbe.exception.*;
+import com.university.medvladbe.service.*;
+import javassist.*;
+import lombok.extern.slf4j.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.http.*;
+import org.springframework.security.core.*;
+import org.springframework.security.core.context.*;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.*;
 
 @RestController
 @Slf4j
@@ -68,10 +64,6 @@ public class QuestionController {
     public List<QuestionDto> getActiveQuestions() {
         return questionService.getQuestions();
     }
-    @GetMapping("/getCategories")
-    public List<QuestionCategory> getQuestionCategory(){
-        return questionService.getQuestionsCategories();
-    }
     @GetMapping("/getSymptoms")
     public List<SymptomDto> getSymptoms(){
         return questionService.getSymptoms();
@@ -93,10 +85,13 @@ public class QuestionController {
     }
 
     @PostMapping("/doctor/postQuestionAnswer")
-    public void postQuestionAnswer(@RequestParam long questionId,@RequestParam String content){
-        log.info(content);
+    public void postQuestionAnswer(@RequestBody PostQuestionAnswerBody postQuestionAnswerBody){
+
         String doctorUsername = getCurrentUsername();
-        questionService.postQuestionAnswer(questionId,doctorUsername,content);
+        questionService.postQuestionAnswer(postQuestionAnswerBody.getQuestionId(),
+                doctorUsername,
+                postQuestionAnswerBody.getComment(),
+                postQuestionAnswerBody.getCondition());
     }
     @PostMapping("/doctor/likeQuestionAnswer")
     public ResponseEntity likeQuestionAnswer(@RequestParam long questionAnswerId){

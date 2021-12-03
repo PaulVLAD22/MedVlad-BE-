@@ -1,9 +1,6 @@
 package com.university.medvladbe.service;
 
-import com.university.medvladbe.dto.AdminHistoryDto;
-import com.university.medvladbe.dto.QuestionDto;
-import com.university.medvladbe.dto.RegistrationResultDto;
-import com.university.medvladbe.dto.UserDto;
+import com.university.medvladbe.dto.*;
 import com.university.medvladbe.model.entity.account.DefinedRole;
 import com.university.medvladbe.model.entity.account.Role;
 import com.university.medvladbe.model.entity.account.User;
@@ -59,12 +56,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         List<QuestionDto> questionDtos = new ArrayList<>();
 
         questions.forEach(question -> {
+            QuestionAnswerDto questionAnswerDto=null;
+            if (question.getAnswer()!=null){
+                questionAnswerDto=question.getAnswer().questionAnswerDtoFromQuestionAnswer();
+            }
             questionDtos.add(
                     QuestionDto.builder()
                             .id(question.getId())
                             .userDto(question.getUser().userDtoFromUser())
                             .content(question.getContent())
-                            .questionAnswerList(questionRepository.findAnswersForQuestion(question).stream().map(QuestionAnswer::questionAnswerDtoFromQuestionAnswer).collect(Collectors.toList()))
+                            .answer(questionAnswerDto)
                             .comment(question.getComment())
                             .verdict(question.isVerdict())
                             .postingDate(question.getPostingDate())
