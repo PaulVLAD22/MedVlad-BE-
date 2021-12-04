@@ -12,6 +12,7 @@ import java.util.List;
 @Repository
 public interface QuestionRepository extends JpaRepository<Question,Long> {
     List<Question> getQuestionByCheckedTrueAndAdmin_Username(String username);
+    List<Question> getQuestionByAnswerNotNull();
 
     @Query("SELECT qr FROM Question qr WHERE qr.verdict=true")
     List<Question> findActiveQuestions();
@@ -21,5 +22,6 @@ public interface QuestionRepository extends JpaRepository<Question,Long> {
 
     @Query("Select q from Question q where q.checked=false")
     List<Question> findUncheckedQuestions();
+
 
 }
