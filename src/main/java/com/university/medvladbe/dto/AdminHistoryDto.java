@@ -10,7 +10,6 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
 @Data
 @Builder
 public class AdminHistoryDto {

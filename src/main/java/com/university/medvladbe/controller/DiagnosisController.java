@@ -1,5 +1,7 @@
 package com.university.medvladbe.controller;
 
+import com.university.medvladbe.dto.*;
+import com.university.medvladbe.dto.request.*;
 import com.university.medvladbe.service.*;
 import lombok.extern.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
@@ -13,9 +15,10 @@ public class DiagnosisController {
     @Autowired
     private DiagnosisService diagnosisService;
 
-    @GetMapping("/user/calculateDiagnosis")
-    public String calculateDiagnosis(@RequestParam List<Integer> selectedSymptoms){
-        return diagnosisService.calculateCondition(selectedSymptoms);
+    @PostMapping("/user/calculateDiagnosis")
+    public DiagnosisResultDto calculateDiagnosis(@RequestBody CalculateDiagnosisInput calculateDiagnosisInput){
+        System.out.println("ADA");
+        return diagnosisService.calculateCondition(calculateDiagnosisInput.getSelectedSymptoms());
     }
 
 }
