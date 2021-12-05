@@ -9,6 +9,6 @@ import lombok.experimental.*;
 @Builder
 public class DiagnosisResultDto {
     private String condition;
-    private int similarityScore;
+    private double similarityScore;
     private UserDto similarQuestionDoctor;
 }
