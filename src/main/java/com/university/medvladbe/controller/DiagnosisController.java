@@ -17,7 +17,6 @@ public class DiagnosisController {
 
     @PostMapping("/user/calculateDiagnosis")
     public DiagnosisResultDto calculateDiagnosis(@RequestBody CalculateDiagnosisInput calculateDiagnosisInput){
-        System.out.println("ADA");
         return diagnosisService.calculateCondition(calculateDiagnosisInput.getSelectedSymptoms());
     }
 

@@ -19,12 +19,14 @@ public class DiagnosisService {
     @Autowired
     private UserRepository userRepository;
 
-    public DiagnosisResultDto calculateCondition(List<Integer> selectedSymptoms){
+    public DiagnosisResultDto calculateCondition(List<Integer> selectedSymptoms) {
         List<Symptom> symptomList = symptomRepository.findAll();
         List<Question> questionLists = questionRepository.getQuestionByAnswerNotNull();
 
         Question similarQuestion = null;
-        double maxSimilarity = 0 ;
+        double maxSimilarity = -1;
+        System.out.println("AICI");
+        System.out.println(selectedSymptoms);
         for (Question question : questionLists) {
             List<Symptom> symptoms = question.getSymptoms();
             List<Integer> binaryArray = new ArrayList<>();
@@ -32,8 +34,10 @@ public class DiagnosisService {
                 binaryArray.add(0);
             }
             symptoms.forEach(symptom -> binaryArray.set(symptomList.indexOf(symptom), 1));
-            if (cosineSimilarity(binaryArray, selectedSymptoms) > maxSimilarity) {
-                maxSimilarity = cosineSimilarity(binaryArray, selectedSymptoms);
+            if (similarity(binaryArray, selectedSymptoms) > maxSimilarity) {
+                System.out.println(binaryArray);
+                System.out.println(similarity(binaryArray, selectedSymptoms));
+                maxSimilarity = similarity(binaryArray, selectedSymptoms);
                 similarQuestion = question;
             }
         }
@@ -46,14 +50,18 @@ public class DiagnosisService {
                 .similarQuestionDoctor(similarQuestion.getAnswer().getDoctor().userDtoFromUser())
                 .build();
     }
-    private double cosineSimilarity(List<Integer> vectorA, List<Integer> vectorB) {
-        int dotProduct = 0;
-        int normA = 0, normB = 0;
+
+    private double similarity(List<Integer> vectorA, List<Integer> vectorB) {
+        int equalScore = 0;
         for (int i = 0; i < vectorA.size(); i++) {
-            dotProduct += vectorA.get(i) * vectorB.get(i);
-            normA += Math.pow(vectorA.get(i), 2);
-            normB += Math.pow(vectorB.get(i), 2);
+            if (vectorA.get(i)==vectorB.get(i)) {
+                if (vectorA.get(i) == 0) {
+                    equalScore += 1;
+                } else if (vectorA.get(i) == 1) {
+                    equalScore += 5;
+                }
+            }
         }
-        return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+        return equalScore;
     }
 }
