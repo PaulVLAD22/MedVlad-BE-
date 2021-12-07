@@ -12,6 +12,7 @@ import com.university.medvladbe.exception.EmailOrUsernameAlreadyTaken;
 import com.university.medvladbe.dto.request.RegisterUserRequest;
 import com.university.medvladbe.service.OtcService;
 import com.university.medvladbe.service.UserDetailsServiceImpl;
+import com.university.medvladbe.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,7 +53,7 @@ public class UserController {
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
                 String refreshToken = authorizationHeader.substring("Bearer ".length());
-                Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());// secret seteaza-l undeva ascuns
+                Algorithm algorithm = Algorithm.HMAC256(Secrets.passwordKey.getBytes());// secret seteaza-l undeva ascuns
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(refreshToken);
                 String username = decodedJWT.getSubject();

@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.university.medvladbe.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -35,7 +36,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             if (autherizationHeader != null && autherizationHeader.startsWith("Bearer ")) {
                 try {
                     String token = autherizationHeader.substring("Bearer ".length());
-                    Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());// secret seteaza-l undeva ascuns
+                    Algorithm algorithm = Algorithm.HMAC256(Secrets.passwordKey.getBytes());// secret seteaza-l undeva ascuns
                     JWTVerifier verifier = JWT.require(algorithm).build();
                     DecodedJWT decodedJWT = verifier.verify(token);
                     String username = decodedJWT.getSubject();

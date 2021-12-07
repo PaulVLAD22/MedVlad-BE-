@@ -222,8 +222,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         if (user == null) {
             throw new UsernameNotFoundException("Could not find user");
-        } else if (!user.isActive()) {
-            throw new UserNotActive();
         } else {
             log.info("User found in database");
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();

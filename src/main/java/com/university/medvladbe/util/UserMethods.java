@@ -31,9 +31,5 @@ public class UserMethods {
         }
         return username;
     }
-    public static String generateToken() {
-        // verifica sa nu fie acelasi ca altul
-        String uuid = UUID.randomUUID().toString();
-        return uuid.replace("-","");
-    }
+
 }
