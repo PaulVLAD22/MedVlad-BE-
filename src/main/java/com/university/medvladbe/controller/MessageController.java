@@ -5,6 +5,8 @@ import com.university.medvladbe.service.MessageService;
 import com.university.medvladbe.service.UserDetailsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
+import org.springframework.security.core.userdetails.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,8 +35,14 @@ public class MessageController {
         return messageService.getLastMessagesForUser(getCurrentUsername());
     }
     @PostMapping("/postMessage")
-    public void postMessage(@RequestParam String content, @RequestParam String receiverUsername){
-        messageService.postMessage(getCurrentUsername(),content,receiverUsername);
+    public ResponseEntity postMessage(@RequestParam String content, @RequestParam String receiverUsername){
+        try {
+            messageService.postMessage(getCurrentUsername(), content, receiverUsername);
+            return ResponseEntity.ok().build();
+        }
+        catch(Exception e){
+           return  ResponseEntity.status(404).build();
+        }
     }
     @GetMapping("/getMessagesWithUser")
     public List<MessageDto> getMessagesWithUser(@RequestParam String username2){

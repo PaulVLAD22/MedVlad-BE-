@@ -37,7 +37,7 @@ public class Question {
     @ToString.Exclude
     private QuestionAnswer answer;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany
     @Fetch(value = FetchMode.SELECT)
     @ToString.Exclude
     private List<Symptom> symptoms;

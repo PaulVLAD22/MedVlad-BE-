@@ -8,6 +8,7 @@ import com.university.medvladbe.repository.UserRepository;
 import com.university.medvladbe.util.UserMethods;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -53,6 +54,7 @@ public class MessageService {
         log.info("ADMIPP");
         List<Message> messages = messageRepository.findAllBySenderOrReceiver
                 (userRepository.findByUsername(username), userRepository.findByUsername(username));
+        messages.forEach(System.out::println);
         List<MessageDto> messageDtos = new ArrayList<>();
         Set<String> interactedWithUsers = new HashSet<>();
         log.info("PAPA");
@@ -85,6 +87,9 @@ public class MessageService {
 
     public void postMessage(String senderUsername, String content, String receiverUsername) {
         log.info("COX");
+        if (userRepository.findByUsername(receiverUsername)==null){
+            throw new UsernameNotFoundException("");
+        }
         Message message = Message.builder()
                 .content(content)
                 .sender(userRepository.findByUsername(senderUsername))
