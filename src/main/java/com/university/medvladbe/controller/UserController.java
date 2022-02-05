@@ -24,6 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.ws.Response;
 import java.io.IOException;
 import java.util.*;
 
@@ -188,9 +189,14 @@ public class UserController {
     }
 
     @DeleteMapping("/admin/deleteUser")
-    public void adminDeleteUser(@RequestParam String username,
-                                @RequestParam String comment) {
-        userService.deleteUser(getCurrentUsername(), username, comment);
+    public ResponseEntity adminDeleteUser(@RequestParam String username,
+                                                  @RequestParam String comment) {
+        try {
+            userService.deleteUser(getCurrentUsername(), username, comment);
+            return ResponseEntity.ok().build();
+        }catch(NullPointerException e){
+            return ResponseEntity.status(404).build();
+        }
     }
 
     @PostMapping("/forgotPassword")
