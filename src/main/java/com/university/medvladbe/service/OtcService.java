@@ -43,8 +43,9 @@ public class OtcService {
         if (userRepository.findByEmail(email)==null){
             throw new UsernameNotFoundException("");
         }
+        String url = "http://localhost:3000/resetPassword/";
         int otc = otcService.generateOTP(email);
-        String link = "http://localhost:3000/resetPassword/" + otc +"/" + email ;
+        String link = url + otc +"/" + email ;
         String emailText = "Access <a href=\"" + link + "\"" + ">" + link + "</a> to reset you password. Available 5 minutes.";
         emailService.sendHtmlEmail(email, "Password Reset", emailText);
     }
