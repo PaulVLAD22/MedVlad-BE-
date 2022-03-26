@@ -25,8 +25,6 @@ public class DiagnosisService {
 
         Question similarQuestion = null;
         double maxSimilarity = -1;
-        System.out.println("AICI");
-        System.out.println(selectedSymptoms);
         for (Question question : questionLists) {
             List<Symptom> symptoms = question.getSymptoms();
             List<Integer> binaryArray = new ArrayList<>();
@@ -34,9 +32,8 @@ public class DiagnosisService {
                 binaryArray.add(0);
             }
             symptoms.forEach(symptom -> binaryArray.set(symptomList.indexOf(symptom), 1));
+            // binary array is binary array of all symptoms
             if (similarity(binaryArray, selectedSymptoms) > maxSimilarity) {
-                System.out.println(binaryArray);
-                System.out.println(similarity(binaryArray, selectedSymptoms));
                 maxSimilarity = similarity(binaryArray, selectedSymptoms);
                 similarQuestion = question;
             }
@@ -51,17 +48,56 @@ public class DiagnosisService {
                 .build();
     }
 
+    //https://en.wikipedia.org/wiki/Jaccard_index
+    //
+    //https://stats.stackexchange.com/questions/550857/which-method-is-best-to-find-the-correlation-between-2-datasets-in-my-case?noredirect=1&lq=1
+
     private double similarity(List<Integer> vectorA, List<Integer> vectorB) {
-        int equalScore = 0;
+//        int equalScore = 0;
+//        for (int i = 0; i < vectorA.size(); i++) {
+//            if (vectorA.get(i)==vectorB.get(i)) {
+//                if (vectorA.get(i) == 0) {
+//                    equalScore += 1;
+//                } else if (vectorA.get(i) == 1) {
+//                    equalScore += 5;
+//                }
+//            }
+//        }
+//        return equalScore;
+//        double similarity = 1 - jaccardDistance(vectorA,vectorB);
+        double similarity = 1-hammingDistance(vectorA,vectorB)/vectorA.size();
+        return similarity;
+
+    }
+    // incerca hamming distance
+    private double hammingDistance(List<Integer> vectorA, List<Integer> vectorB){
+        int out=0;
         for (int i = 0; i < vectorA.size(); i++) {
-            if (vectorA.get(i)==vectorB.get(i)) {
-                if (vectorA.get(i) == 0) {
-                    equalScore += 1;
-                } else if (vectorA.get(i) == 1) {
-                    equalScore += 5;
-                }
+            if (vectorA.get(i)!=vectorB.get(i)){
+                out+=1;
             }
         }
-        return equalScore;
+        return out;
+    }
+    // incearca produs scalar
+    //https://stats.stackexchange.com/questions/510993/correlation-between-two-vectors-of-binary-values
+
+    // nu prea merge
+    private double jaccardDistance(List<Integer> vectorA, List<Integer> vectorB){
+        double m11=0,m01=0,m10=0;
+        for (int i=0;i<vectorA.size();i++){
+            if (vectorA.get(i).equals(vectorB.get(i)) && vectorA.get(i)==1){
+                m11+=1;
+            }
+            else if (vectorA.get(i)==0 && vectorB.get(i)==1){
+                m01+=1;
+            }
+            else if (vectorA.get(i)==1 && vectorB.get(i)==0){
+                m10+=1;
+            }
+        }
+        // daca s la fel da 1
+        System.out.println(m11+" "+m10+" "+m01);
+        return (m11/(m01+m10+m11));
     }
 }
