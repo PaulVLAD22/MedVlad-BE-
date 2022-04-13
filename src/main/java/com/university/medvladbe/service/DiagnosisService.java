@@ -88,7 +88,8 @@ public class DiagnosisService {
 //        }
 //        return equalScore;
 //        double similarity = 1 - jaccardDistance(vectorA,vectorB);
-        double similarity = 1-scalarProduct(vectorA,vectorB)/vectorA.size();
+
+        double similarity = scalarProduct(vectorA,vectorB)/Collections.frequency(vectorA,1);
         return similarity;
 
     }
