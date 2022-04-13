@@ -19,7 +19,7 @@ public class DiagnosisService {
     @Autowired
     private UserRepository userRepository;
 
-    public DiagnosisResultDto calculateCondition(List<Integer> selectedSymptoms) {
+    public List<DiagnosisResultDto> calculateCondition(List<Integer> selectedSymptoms) {
         List<Symptom> symptomList = symptomRepository.findAll();
         List<Question> questionLists = questionRepository.getQuestionByAnswerNotNull();
 
@@ -38,14 +38,37 @@ public class DiagnosisService {
                 similarQuestion = question;
             }
         }
+//        return DiagnosisResultDto
+//                .builder()
+//                .condition(similarQuestion.getAnswer().getPacientCondition())
+//                .similarityScore(maxSimilarity)
+//                .similarQuestionDoctor(similarQuestion.getAnswer().getDoctor().userDtoFromUser())
+//                .build();
+
+        List<DiagnosisResultDto> diagnosisResultDtos = new ArrayList<>();
 
 
-        return DiagnosisResultDto
-                .builder()
-                .condition(similarQuestion.getAnswer().getPacientCondition())
-                .similarityScore(maxSimilarity)
-                .similarQuestionDoctor(similarQuestion.getAnswer().getDoctor().userDtoFromUser())
-                .build();
+        // diagnosis Result Dtos holds every
+        for (Question question : questionLists) {
+            List<Symptom> symptoms = question.getSymptoms();
+            List<Integer> binaryArray = new ArrayList<>();
+            for (int i = 0; i < symptomList.size(); i++) {
+                binaryArray.add(0);
+            }
+            symptoms.forEach(symptom -> binaryArray.set(symptomList.indexOf(symptom), 1));
+            // binary array is binary array of all symptoms
+            if (similarity(binaryArray, selectedSymptoms) == maxSimilarity) {
+                diagnosisResultDtos.add(DiagnosisResultDto.builder()
+                        .condition(question.getAnswer().getPacientCondition())
+                        .similarityScore(maxSimilarity)
+                        .similarQuestionDoctor(question.getAnswer().getDoctor().userDtoFromUser())
+                        .build());
+            }
+        }
+        return diagnosisResultDtos;
+
+
+
     }
 
     //https://en.wikipedia.org/wiki/Jaccard_index
@@ -65,10 +88,21 @@ public class DiagnosisService {
 //        }
 //        return equalScore;
 //        double similarity = 1 - jaccardDistance(vectorA,vectorB);
-        double similarity = 1-hammingDistance(vectorA,vectorB)/vectorA.size();
+        double similarity = 1-scalarProduct(vectorA,vectorB)/vectorA.size();
         return similarity;
 
     }
+
+    private double scalarProduct(List<Integer> vectorA, List<Integer> vectorB){
+        int out=0;
+        for (int i = 0; i < vectorA.size(); i++) {
+            if (vectorA.get(i)*vectorB.get(i)==1){
+                out+=1;
+            }
+        }
+        return out;
+    }
+
     // incerca hamming distance
     private double hammingDistance(List<Integer> vectorA, List<Integer> vectorB){
         int out=0;

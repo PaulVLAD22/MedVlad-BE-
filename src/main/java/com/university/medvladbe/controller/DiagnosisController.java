@@ -16,7 +16,7 @@ public class DiagnosisController {
     private DiagnosisService diagnosisService;
 
     @PostMapping("/user/calculateDiagnosis")
-    public DiagnosisResultDto calculateDiagnosis(@RequestBody CalculateDiagnosisInput calculateDiagnosisInput){
+    public List<DiagnosisResultDto> calculateDiagnosis(@RequestBody CalculateDiagnosisInput calculateDiagnosisInput){
         return diagnosisService.calculateCondition(calculateDiagnosisInput.getSelectedSymptoms());
     }
 
