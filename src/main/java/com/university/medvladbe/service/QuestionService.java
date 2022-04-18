@@ -35,6 +35,7 @@ public class QuestionService {
         this.symptomRepository = symptomRepository;
     }
 
+
     public List<SymptomDto> getSymptoms() {
         return symptomRepository.findAll().stream().map(Symptom::symptomDtoFromSymptom).collect(Collectors.toList());
     }

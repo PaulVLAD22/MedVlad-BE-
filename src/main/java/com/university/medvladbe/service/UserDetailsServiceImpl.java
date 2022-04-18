@@ -125,9 +125,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             registrationResultRepository.save(registrationResult);
             emailService.sendTextEmail(user.getEmail(), "Welcome to Medvlad", "Your account has just been created");
         } else {
+            banRecordRepository.save(BanRecord.builder()
+                    .admin(admin)
+                    .bannedEmail(user.getEmail())
+                    .bannedUsername(username)
+                    .reason(comment).build());
             userRepository.delete(user);
             emailService.sendTextEmail(user.getEmail(), "Account Deletion", "Your account has just been deleted by admin " + adminUsername);
         }
+    }
+
+    public List<BanRecord> getBannedUsersForAdmin(String adminUsername){
+        User admin = userRepository.findByUsername(adminUsername);
+        return banRecordRepository.findByAdmin(admin);
     }
 
     public void acceptDoctorRegistration(String adminUsername, String username, String firstName,
@@ -149,6 +159,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             emailService.sendTextEmail(user.getEmail(), "Welcome to Medvlad", "Your account has just been created");
 
         } else {
+            banRecordRepository.save(BanRecord.builder()
+                    .admin(admin)
+                    .bannedEmail(user.getEmail())
+                    .bannedUsername(username)
+                    .reason(comment).build());
             userRepository.delete(user);
             emailService.sendTextEmail(user.getEmail(), "Account Deletion", "Your account has just been deleted by admin " + adminUsername);
         }

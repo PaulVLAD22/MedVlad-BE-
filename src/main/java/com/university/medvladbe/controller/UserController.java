@@ -10,6 +10,7 @@ import com.university.medvladbe.dto.UserDto;
 import com.university.medvladbe.model.entity.account.User;
 import com.university.medvladbe.exception.EmailOrUsernameAlreadyTaken;
 import com.university.medvladbe.dto.request.RegisterUserRequest;
+import com.university.medvladbe.model.entity.ban.BanRecord;
 import com.university.medvladbe.service.OtcService;
 import com.university.medvladbe.service.UserDetailsServiceImpl;
 import com.university.medvladbe.util.*;
@@ -122,6 +123,11 @@ public class UserController {
             return ResponseEntity.status(409).build();//Conflict
         }
         return new ResponseEntity(HttpStatus.OK);
+    }
+    @GetMapping("/admin/getBannedUsersForAdmin")
+    public List<BanRecord> getBannedUsers(){
+        String adminUsername = getCurrentUsername();
+        return userService.getBannedUsersForAdmin(adminUsername);
     }
 
     @GetMapping("/getUserByUsername")
