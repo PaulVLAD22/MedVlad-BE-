@@ -14,7 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "ban_record")
+@Table(name = " ban_record")
 public class BanRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,5 +25,4 @@ public class BanRecord {
     private String bannedUsername;
     private String bannedEmail;
     private String reason;
-
 }

@@ -49,11 +49,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/forgotPassword").permitAll()
                 .antMatchers("/verifyToken").permitAll()
                 .antMatchers("/resetPassword").permitAll();
-//asta merge        http.authorizeRequests().antMatchers("/user/postQuestion?content=par").hasAuthority("USER");
-        //http.authorizeRequests().antMatchers("/user/**").hasAnyAuthority("");
-//                .antMatchers("/doctor/**").hasRole("DOCTOR")
-//                .antMatchers("/admin/**").hasRole("Admin")
-//        http.authorizeRequests().anyRequest().authenticated();
+    //        http.authorizeRequests().antMatchers("/user/**").hasRole("USER")
+    //                .antMatchers("/doctor/**").hasRole("DOCTOR")
+    //                .antMatchers("/admin/**").hasRole("Admin");
+    //        http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
